@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vl_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vr_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        app:layout_constraintStart_toEndOf="@id/vl_guideline"
+        app:layout_constraintEnd_toStartOf="@id/vr_guideline"
+        android:orientation="vertical"
+        >
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="15dp"
+            android:background="?attr/textColor" />
+
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        android:layout_marginTop="5dp"
+        app:chipSpacing="8dp"
+        android:id="@+id/filterChipGroup"
+        >
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All"
+            android:letterSpacing="10"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipVegetarian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vegetarian"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipNonVegetarian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Non Vegetarian"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipGrains"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grains"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipMilkProducts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Milk and Milk Products"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFruitProducts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fruit and Fruit Products"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipEggs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eggs"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipMeatAndPoultry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meat and Poultry"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipVegetables"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vegetables"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSeedsAndNuts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seeds And Nuts"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSugarAndSugarProducts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sugar And Sugar Products"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipNABeverages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Non Alcoholic Beverages"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipABeverages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alcoholic Beverages"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipDiscretionary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discretinary"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+    </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

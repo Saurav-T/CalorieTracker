@@ -6,9 +6,9 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/nav_calculator"
+        android:id="@+id/nav_food"
         android:icon="@drawable/ic_calculator"
-        android:title="Calculator" />
+        android:title="Food" />
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_settings"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="cardBackgroundColor" format="color"/>
+    <attr name="cardTextColor" format="color"/>
+    <attr name="greyButtonColor" format="color"/>
+    <attr name="textColor" format="color"/>
+</resources>
