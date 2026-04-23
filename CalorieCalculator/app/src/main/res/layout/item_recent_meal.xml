@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Full Meal"
+                android:id="@+id/meal_name"
                 android:layout_marginRight="20dp"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -63,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:id="@+id/meal_time_ago"
             android:text="2m ago"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

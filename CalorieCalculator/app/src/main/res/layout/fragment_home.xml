@@ -76,6 +76,7 @@
                     android:textColor="?attr/textColor" />
 
                 <TextView
+                    android:id="@+id/today_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Saturday"
@@ -206,13 +207,15 @@
                                 android:layout_height="wrap_content"
                                 android:text="30"
                                 android:textColor="?attr/cardTextColor"
-                                android:textSize="30sp"
+                                android:textSize="25sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="g"
+                                android:id="@+id/carb_unit"
+                                android:layout_marginLeft="2dp"
                                 android:textColor="?attr/cardTextColor"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -242,13 +245,15 @@
                                 android:layout_height="wrap_content"
                                 android:text="30"
                                 android:textColor="?attr/cardTextColor"
-                                android:textSize="30sp"
+                                android:textSize="25sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="g"
+                                android:id="@+id/protein_unit"
+                                android:layout_marginLeft="2dp"
                                 android:textColor="?attr/cardTextColor"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -278,13 +283,15 @@
                                 android:layout_height="wrap_content"
                                 android:text="30"
                                 android:textColor="?attr/cardTextColor"
-                                android:textSize="30sp"
+                                android:textSize="25sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="g"
+                                android:id="@+id/fat_unit"
+                                android:layout_marginLeft="2dp"
                                 android:textColor="?attr/cardTextColor"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -304,6 +311,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Recent Meals"
+            android:textColor="?attr/textColor"
             android:textSize="18sp" />
 
         <FrameLayout
@@ -314,26 +322,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/recent_meals_recycler"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="No Records Available"/>
+                android:orientation="vertical"
+                android:id="@+id/overlay">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_records"
+                    app:tint="?attr/overlayColor"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No records available."
+                    android:textColor="?attr/overlayColor"/>
+            </LinearLayout>
         </FrameLayout>
     </LinearLayout>
     <com.google.android.material.card.MaterialCardView
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:id="@+id/add_calculation"
         app:strokeWidth="0dp"
         app:layout_constraintBottom_toTopOf="@id/hb_guideline"
         app:layout_constraintEnd_toStartOf="@id/vr_guideline">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="+"
-            android:id="@+id/add_calculation"
-            android:background="?cardBackgroundColor"
-            android:tint="?attr/cardTextColor"
+            android:background="?attr/actionButtonBackgroundColor"
+            app:tint="?attr/actionButtonForegroundColor"
             android:src="@drawable/ic_calculator"
             android:padding="10dp"
             android:gravity="center"/>

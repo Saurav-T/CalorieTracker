@@ -32,12 +32,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.98" />
+        app:layout_constraintGuide_percent="0.95" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_back"
+        app:tint="?attr/iconColor"
+        android:id="@+id/back_button"
         app:layout_constraintTop_toTopOf="@id/title"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintStart_toEndOf="@id/vl_guideline"/>
@@ -76,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
+                app:boxStrokeColor="@color/text_input_stroke"
                 app:boxBackgroundColor="@color/white"
                 app:boxBackgroundMode="outline"
                 app:boxCornerRadiusBottomEnd="12dp"
@@ -95,7 +98,7 @@
                     android:maxLines="1"
                     android:padding="12dp"
                     android:textColor="@color/black"
-                    android:textColorHint="?attr/colorOnSurfaceVariant" />
+                    android:textColorHint="@color/dark_grey" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Filter button -->
@@ -106,7 +109,7 @@
                 android:layout_marginEnd="10dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="?attr/cardBackgroundColor"
+                app:cardBackgroundColor="?attr/sideButtonBackgroundColor"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
                 app:strokeColor="@color/purple"
@@ -117,14 +120,38 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_filter"
-                    app:tint="?attr/cardTextColor" />
+                    app:tint="?attr/sideButtonTextColor" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/food_list"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/food_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:id="@+id/overlay">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_grocery"
+                    app:tint="?attr/overlayColor"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No food items available"
+                    android:textColor="?attr/overlayColor"/>
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
@@ -142,8 +169,8 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="View Items"
-            android:textColor="?attr/textColor"
-            android:background="?attr/greyButtonColor"/>
+            android:textColor="?attr/sideButtonTextColor"
+            android:background="?attr/sideButtonBackgroundColor"/>
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
@@ -159,7 +186,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?cardBackgroundColor"
+            android:background="?attr/heroButtonBackgroundColor"
             android:gravity="center">
 
             <LinearLayout
@@ -171,7 +198,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Select Items ("
-                    android:textColor="?attr/cardTextColor" />
+                    android:textColor="?attr/heroButtonTextColor" />
 
                 <TextView
                     android:id="@+id/selected_items_number"
@@ -179,14 +206,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="0"
-                    android:textColor="?attr/cardTextColor" />
+                    android:textColor="?attr/heroButtonTextColor" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text=")"
-                    android:textColor="?attr/cardTextColor" />
+                    android:textColor="?attr/heroButtonTextColor" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

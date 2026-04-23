@@ -2,6 +2,7 @@ package com.example.caloriecalculator;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -16,6 +17,7 @@ import com.example.caloriecalculator.fragments.FoodFragment;
 import com.example.caloriecalculator.fragments.HomeFragment;
 import com.example.caloriecalculator.fragments.SettingsFragment;
 import com.example.caloriecalculator.fragments.StartUpFragment;
+import com.example.caloriecalculator.helpers.FilterPrefs;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setupWindowInsets();
         initPreferences();
         setupBottomNavigation();
+        resetFiltersOnAppStart();
 
         // Load initial fragment based on onboarding status
         loadInitialFragment();
@@ -136,14 +139,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment homeFragment = getOrCreateHomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        // Beautiful fade animations
-        transaction.setCustomAnimations(
-                R.anim.fade_in,      // enter
-                R.anim.fade_out,     // exit
-                R.anim.fade_in,      // popEnter
-                R.anim.fade_out      // popExit
-        );
-
         transaction.replace(R.id.fragment_container, homeFragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -152,5 +147,10 @@ public class MainActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(() -> {
             nav.setSelectedItemId(R.id.nav_home);
         }, 200);
+    }
+    private void resetFiltersOnAppStart() {
+        FilterPrefs prefs = new FilterPrefs(this);
+        prefs.clear();   // This will reset both dietary and category to "All"
+        Log.d("MainActivity", "🔄 Filters reset to All on app restart");
     }
 }

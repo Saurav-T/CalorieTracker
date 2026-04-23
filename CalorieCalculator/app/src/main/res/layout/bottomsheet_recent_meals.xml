@@ -158,6 +158,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:text="g"
+                        android:id="@+id/fat_unit"
                         android:textColor="?attr/textColor"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -196,6 +197,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:text="g"
+                        android:id="@+id/protein_unit"
                         android:textColor="?attr/textColor"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -233,6 +235,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
+                        android:id="@+id/carb_unit"
                         android:text="g"
                         android:textColor="?attr/textColor"
                         android:textStyle="bold" />
@@ -262,17 +265,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="20dp"
+            >
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@id/hb_guideline"
+            app:layout_constraintEnd_toStartOf="@id/vr_guideline"
+            app:layout_constraintStart_toEndOf="@id/vl_guideline"
+            app:strokeWidth="0dp">
 
-            <Button
-                android:id="@+id/delete"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/red"
-                android:text="Delete"
-                android:textColor="@color/white" />
+                android:layout_height="match_parent"
+                android:background="@color/red"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Delete"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </LinearLayout>
+        </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

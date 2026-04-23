@@ -2,6 +2,7 @@ package com.example.caloriecalculator.bottomsheets;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +12,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.caloriecalculator.R;
+import com.example.caloriecalculator.database.DatabaseHelper;
+import com.example.caloriecalculator.fragments.EditFoodFragment;
+import com.example.caloriecalculator.fragments.FoodFragment;
 import com.example.caloriecalculator.models.FoodItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.card.MaterialCardView;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
 
     private static final String ARG_FOOD_ITEM = "food_item";
 
     private FoodItem foodItem;
-    private TextView foodName, foodCategory, servingSize, servingMeasure, servingCalorie;
+    private TextView foodName, foodCategory, servingSize, servingUnit, servingCalorie;
     private TextView foodFats, foodProtein, foodCarbs;
+
+    private TextView fatUnit, proteinUnit, carbUnit;
     private MaterialCardView dietaryIndicator;
-    private Button editButton, deleteButton;
+    private MaterialCardView editButton, deleteButton;
 
     public static FoodBottomSheetFragment newInstance(FoodItem foodItem) {
         FoodBottomSheetFragment fragment = new FoodBottomSheetFragment();
@@ -48,17 +57,19 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottomsheet_food_details, container, false);
-        
+
         initViews(view);
         bindData();
         setupClickListeners();
-        
+
         return view;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        TypedValue typedValue = new TypedValue();
+        requireContext().getTheme().resolveAttribute(R.attr.bottomSheetBgColor, typedValue, true);
 
         // CUSTOMIZE: Remove bottom padding + set background
         dialog.setOnShowListener(d -> {
@@ -66,9 +77,8 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
             if (bottomSheet != null) {
                 // Remove bottom padding
                 bottomSheet.setPadding(0, 0, 0, 0);
-
                 // Set custom background color
-                bottomSheet.setBackgroundColor(getResources().getColor(R.color.white, null));
+                bottomSheet.setBackgroundColor(typedValue.data);
 
             }
         });
@@ -80,11 +90,14 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
         foodName = view.findViewById(R.id.food_name);
         foodCategory = view.findViewById(R.id.food_category);
         servingSize = view.findViewById(R.id.serving_size);
-        servingMeasure = view.findViewById(R.id.serving_measure);
+        servingUnit = view.findViewById(R.id.serving_unit);
         servingCalorie = view.findViewById(R.id.serving_calorie);
         foodFats = view.findViewById(R.id.food_fats);
         foodProtein = view.findViewById(R.id.food_protein);
         foodCarbs = view.findViewById(R.id.food_carbs);
+        fatUnit = view.findViewById(R.id.fat_unit);
+        proteinUnit = view.findViewById(R.id.protein_unit);
+        carbUnit = view.findViewById(R.id.carb_unit);
         dietaryIndicator = view.findViewById(R.id.indicator_layout); // Veg/Non-veg indicator
         editButton = view.findViewById(R.id.edit);
         deleteButton = view.findViewById(R.id.delete);
@@ -96,11 +109,11 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
         foodName.setText(foodItem.getName());
         foodCategory.setText(foodItem.getCategory());
         servingSize.setText(foodItem.getServingSize());
-        servingMeasure.setText(foodItem.getUnit());
-        servingCalorie.setText(foodItem.getCalories());
-        foodFats.setText(foodItem.getFats());
-        foodProtein.setText(foodItem.getProtein());
-        foodCarbs.setText(foodItem.getCarbs());
+        servingUnit.setText(foodItem.getUnit());
+        servingCalorie.setText(formatCalories(parseDouble(foodItem.getCalories())));
+        setMacroValue(foodFats, fatUnit, parseDouble(foodItem.getFats()));
+        setMacroValue(foodProtein, proteinUnit, parseDouble(foodItem.getProtein()));
+        setMacroValue(foodCarbs, carbUnit, parseDouble(foodItem.getCarbs()));
 
         // FIXED: Dietary indicator for MaterialCardView
         if ("Non-Vegetarian".equals(foodItem.getDietaryPref())) {
@@ -119,16 +132,72 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
         }
     }
 
+    private String formatCalories(double calories) {
+        if (calories < 10000) {
+            return String.format(Locale.getDefault(), "%.0f", calories);
+        } else {
+            double inK = calories / 1000.0;
+            return String.format(Locale.getDefault(), "%.1f", inK) + "k";
+        }
+    }
+
+    private void setMacroValue(TextView valueView, TextView unitView, double grams) {
+        if (grams < 1000) {
+            valueView.setText(String.format(Locale.getDefault(), "%.1f", grams));
+            unitView.setText("g");
+        } else {
+            double inKg = grams / 1000.0;
+            valueView.setText(String.format(Locale.getDefault(), "%.1f", inKg));
+            unitView.setText("kg");
+        }
+    }
+
+    private double parseDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
+
+
     private void setupClickListeners() {
         editButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Edit: " + foodItem.getName(), Toast.LENGTH_SHORT).show();
+            if (foodItem != null) {
+                EditFoodFragment editFragment = EditFoodFragment.newInstance(foodItem);
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, editFragment);
+                transaction.addToBackStack("EditFoodFragment");
+                transaction.commit();
+            }
             dismiss();
         });
 
         deleteButton.setOnClickListener(v -> {
-            // TODO: Implement delete from DB
-            Toast.makeText(getContext(), "Delete: " + foodItem.getName(), Toast.LENGTH_SHORT).show();
-            dismiss();
+            if (foodItem != null) {
+                new Thread(() -> {
+                    DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
+                    boolean deleted = dbHelper.deleteFoodItem(foodItem.getId());
+
+                    requireActivity().runOnUiThread(() -> {
+                        if (deleted) {
+                            Toast.makeText(getContext(), "🗑️ " + foodItem.getName() + " deleted!", Toast.LENGTH_SHORT).show();
+
+                            // ✅ BULLETPROOF: Force refresh FoodFragment
+                            FoodFragment foodFragment = (FoodFragment) getParentFragmentManager().findFragmentById(R.id.fragment_container);
+                            if (foodFragment != null) {
+                                foodFragment.onFoodDeleted(foodItem.getId());
+                            }
+
+                            dismiss();
+                        } else {
+                            Toast.makeText(getContext(), "❌ Failed to delete", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }).start();
+            }
         });
     }
+
+
 }

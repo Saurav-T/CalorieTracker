@@ -1,49 +1,55 @@
 package com.example.caloriecalculator.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.caloriecalculator.MainActivity;
 import com.example.caloriecalculator.R;
+import com.example.caloriecalculator.adapters.CalculationItemsAdapter;
+import com.example.caloriecalculator.database.DatabaseHelper;
+import com.example.caloriecalculator.models.FoodItem;
+import com.example.caloriecalculator.models.MealItem;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputEditText;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalculationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class CalculationFragment extends Fragment {
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class CalculationFragment extends Fragment implements CalculationItemsAdapter.OnServingChangedListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_SELECTED_ITEMS = "selected_items";
+    private static final String TAG = "CalculationFragment";
 
-    public CalculationFragment() {
-        // Required empty public constructor
-    }
+    // UI Views
+    private TextInputEditText mealNameEdit;
+    private RecyclerView foodList;
+    private TextView calorieCount, fatsCount, proteinCount, carbsCount;
+    private MaterialCardView doneButton;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CalculationFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CalculationFragment newInstance(String param1, String param2) {
+    // Data
+    private DatabaseHelper dbHelper;
+    private CalculationItemsAdapter adapter;
+    private List<CalculationItemsAdapter.CalculationItem> calculationItems = new ArrayList<>();
+
+    public CalculationFragment() {}
+
+    public static CalculationFragment newInstance(List<FoodItem> selectedItems) {
         CalculationFragment fragment = new CalculationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_SELECTED_ITEMS, new ArrayList<>(selectedItems));
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,16 +57,108 @@ public class CalculationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        dbHelper = new DatabaseHelper(requireContext());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calculation, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_calculation, container, false);
+
+        initViews(view);
+        loadSelectedItems();
+        setupRecyclerView();
+        setupClickListeners();
+
+        return view;
+    }
+
+    private void initViews(View view) {
+        mealNameEdit = view.findViewById(R.id.meal_name);
+        foodList = view.findViewById(R.id.food_list);
+        calorieCount = view.findViewById(R.id.calorie_count);
+        fatsCount = view.findViewById(R.id.fats_count);
+        proteinCount = view.findViewById(R.id.protein_count);
+        carbsCount = view.findViewById(R.id.carbs_count);
+        doneButton = view.findViewById(R.id.done);
+
+        // Back button
+        ImageView backButton = view.findViewById(R.id.back_button);
+        if (backButton != null) {
+            backButton.setOnClickListener(v -> getParentFragmentManager().popBackStack());
+        }
+    }
+
+    private void loadSelectedItems() {
+        if (getArguments() != null) {
+            @SuppressWarnings("unchecked")
+            List<FoodItem> items = (List<FoodItem>) getArguments().getSerializable(ARG_SELECTED_ITEMS);
+            if (items != null) {
+                calculationItems.clear();
+                for (FoodItem item : items) {
+                    calculationItems.add(new CalculationItemsAdapter.CalculationItem(item));
+                }
+                Log.d(TAG, "📦 Loaded " + calculationItems.size() + " items for calculation");
+            }
+        }
+    }
+
+    private void setupRecyclerView() {
+        foodList.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new CalculationItemsAdapter();
+        adapter.setOnServingChangedListener(this);
+
+        List<FoodItem> foodItems = new ArrayList<>();
+        for (CalculationItemsAdapter.CalculationItem calcItem : calculationItems) {
+            foodItems.add(calcItem.foodItem);
+        }
+
+        adapter.updateItems(foodItems); // Convert to FoodItem list
+        foodList.setAdapter(adapter);
+        updateNutritionTotals();
+    }
+
+    private void setupClickListeners() {
+        doneButton.setOnClickListener(v -> saveMeal());
+    }
+
+    @Override
+    public void onServingChanged(CalculationItemsAdapter.CalculationItem item, double newServingSize) {
+        updateNutritionTotals();
+    }
+
+    private void updateNutritionTotals() {
+        calorieCount.setText(String.format("%.1f", adapter.getTotalCalories()));
+        fatsCount.setText(String.format("%.1f", adapter.getTotalFats()));
+        proteinCount.setText(String.format("%.1f", adapter.getTotalProtein()));
+        carbsCount.setText(String.format("%.1f", adapter.getTotalCarbs()));
+    }
+
+    private void saveMeal() {
+        String mealName = mealNameEdit.getText().toString().trim();
+        if (mealName.isEmpty()) {
+            mealName = "Untitled Meal";
+        }
+
+        MealItem meal = new MealItem();
+        meal.setMealName(mealName);
+        meal.setTimestamp(System.currentTimeMillis());
+        meal.setTotalCalories(adapter.getTotalCalories());
+        meal.setTotalFats(adapter.getTotalFats());
+        meal.setTotalProtein(adapter.getTotalProtein());
+        meal.setTotalCarbs(adapter.getTotalCarbs());
+
+        List<MealItem.MealFoodItem> mealFoods = new ArrayList<>();
+        for (CalculationItemsAdapter.CalculationItem calcItem : adapter.getItems()) {
+            mealFoods.add(new MealItem.MealFoodItem(calcItem.foodItem, calcItem.servingSize));
+        }
+        meal.setFoodItems(mealFoods);
+
+        // 🔥 SAVE TO DB
+        long mealId = dbHelper.insertMeal(meal);
+        Log.d(TAG, "💾 SAVED meal ID: " + mealId + " (" + meal.getTotalCalories() + " kcal)");
+
+        // 🔥 GO TO HOME (clear backstack)
+        Intent intent = new Intent(requireContext(), MainActivity.class);
+        startActivity(intent);
     }
 }

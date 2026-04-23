@@ -1,6 +1,7 @@
 package com.example.caloriecalculator.fragments;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.caloriecalculator.R;
 import com.example.caloriecalculator.database.DatabaseHelper;
@@ -22,7 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 public class AddFoodFragment extends Fragment {
 
     // UI Views
-    private ImageView selectedIcon;  // NEW: Icon ImageView
+    private ImageView selectedIcon, back;  // NEW: Icon ImageView
     private TextView unitTextView;
     private MaterialAutoCompleteTextView dietaryPreferences, category, measure;
     private TextInputEditText foodName, perServingSize, calories, fats, protein, carbs;
@@ -76,8 +77,12 @@ public class AddFoodFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_option, container, false);
 
+        hideBottomNavigation();
         initViews(view);
         dbHelper = new DatabaseHelper(requireContext());
+        back.setOnClickListener(v -> {
+            goBackToFoodFragment();
+        });
         setupDropdowns();
         setupClickListeners();
         setupSmartDietaryLogic();
@@ -87,6 +92,7 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void initViews(View view) {
+        back = view.findViewById(R.id.back_button);
         dietaryPreferences = view.findViewById(R.id.dietaryPreferences);
         category = view.findViewById(R.id.category);
         measure = view.findViewById(R.id.measure);
@@ -222,28 +228,38 @@ public class AddFoodFragment extends Fragment {
 
     private void setupDropdown(MaterialAutoCompleteTextView autoCompleteTextView,
                                String[] items, String hint) {
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
+                android.R.layout.simple_list_item_1,
                 items
         );
 
         autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(0);
-        autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
+        autoCompleteTextView.setThreshold(0);  // Instant show
 
+        // ✅ VISIBLE BACKGROUND!
+        autoCompleteTextView.setDropDownBackgroundResource(R.drawable.dropdown_background);
+        autoCompleteTextView.setTextColor(getAttrColor(R.attr.dropdownTextColor));
+
+        // 🔥 SINGLE TAP TRIGGER!
         autoCompleteTextView.setOnClickListener(v -> {
-            autoCompleteTextView.requestFocus();
-            autoCompleteTextView.showDropDown();
+            autoCompleteTextView.showDropDown();  // Show immediately
         });
 
+        // 🔥 KEYBOARD TAP → INSTANT SHOW
+        autoCompleteTextView.setOnTouchListener((v, event) -> {
+            autoCompleteTextView.showDropDown();
+            return false;
+        });
+
+        // 🔥 FOCUS → AUTO SHOW
         autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                autoCompleteTextView.showDropDown();
+                autoCompleteTextView.post(() -> autoCompleteTextView.showDropDown());
             }
         });
     }
-
     private void setupClickListeners() {
         saveButton.setOnClickListener(v -> saveFoodItem());
     }
@@ -307,6 +323,44 @@ public class AddFoodFragment extends Fragment {
     private void goBackToFoodFragment() {
         if (getParentFragmentManager().getBackStackEntryCount() > 0) {
             getParentFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // 🔥 SHOW BOTTOM NAVIGATION WHEN LEAVING THIS SCREEN
+        showBottomNavigation();
+    }
+
+    private int getAttrColor(int attrResId) {
+        TypedValue typedValue = new TypedValue();
+        requireContext().getTheme().resolveAttribute(attrResId, typedValue, true);
+
+        // ✅ CORRECT: Get COLOR resource ID, not raw color
+        if (typedValue.resourceId != 0) {
+            return ContextCompat.getColor(requireContext(), typedValue.resourceId);
+        }
+        return ContextCompat.getColor(requireContext(), android.R.color.black); // Fallback
+    }
+
+    private void hideBottomNavigation() {
+        if (getActivity() != null) {
+            com.google.android.material.bottomnavigation.BottomNavigationView bottomNav =
+                    getActivity().findViewById(R.id.bottom_navigation);
+            if (bottomNav != null) {
+                bottomNav.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void showBottomNavigation() {
+        if (getActivity() != null) {
+            com.google.android.material.bottomnavigation.BottomNavigationView bottomNav =
+                    getActivity().findViewById(R.id.bottom_navigation);
+            if (bottomNav != null) {
+                bottomNav.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

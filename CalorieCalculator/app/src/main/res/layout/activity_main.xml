@@ -19,6 +19,11 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/navigationBarBackground"
+        app:itemIconTint="@color/navigation_item_color"
+        app:itemRippleColor="?attr/navigationBarRipple"
+        app:itemTextColor="@color/navigation_item_color"
+        app:itemActiveIndicatorStyle="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 

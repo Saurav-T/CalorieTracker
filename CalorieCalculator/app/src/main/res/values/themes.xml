@@ -1,11 +1,38 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.CalorieCalculator" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="actionButtonBackgroundColor">@color/black</item>
+        <item name="actionButtonForegroundColor">@color/white</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="bottomSheetBgColor">@color/white</item>
         <item name="cardBackgroundColor">@color/black</item>
         <item name="cardTextColor">@color/white</item>
-        <item name="greyButtonColor">@color/grey</item>
+        <item name="chipBackgroundActiveColor">@color/black</item>
+        <item name="chipBackgroundInactiveColor">@color/light_grey</item>
+        <item name="chipIconActiveColor">@color/white</item>
+        <item name="chipIconInactiveColor">@color/dark_grey</item>
+        <item name="chipTextActiveColor">@color/white</item>
+        <item name="chipTextInactiveColor">@color/dark_grey</item>
+        <item name="dropdownTextColor">@color/black</item>
+        <item name="dropdownBgColor">@color/grey</item>
+        <item name="iconColor">@color/black</item>
+        <item name="iconBackgroundColor">@color/grey</item>
+        <item name="heroButtonBackgroundColor">@color/black</item>
+        <item name="heroButtonTextColor">@color/white</item>
+        <item name="navigationBarBackground">@color/black</item>
+        <item name="navigationBarActive">@color/white</item>
+        <item name="navigationBarInactive">@color/medium_grey</item>
+        <item name="navigationBarRipple">@color/dark_grey</item>
+        <item name="overlayColor">@color/medium_grey</item>
+        <item name="optionsBackground">@color/light_grey</item>
+        <item name="optionsForeground">@color/black</item>
+        <item name="sideButtonBackgroundColor">@color/dark_grey</item>
+        <item name="sideButtonTextColor">@color/white</item>
         <item name="textColor">@color/black</item>
+    </style>
+    <style name="DropdownFixTheme">
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorHint">@color/dark_grey</item>
     </style>
 
     <style name="Theme.CalorieCalculator" parent="Base.Theme.CalorieCalculator" />

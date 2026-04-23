@@ -13,22 +13,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="20sp"
-        android:paddingVertical="15dp"
+        android:paddingVertical="10dp"
         android:gravity="center">
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/icon_layout"
             android:layout_width="45dp"
             android:layout_height="45dp"
             app:cardCornerRadius="20dp"
-            app:strokeWidth="0dp"
+            app:strokeWidth="1dp"
             app:cardBackgroundColor="@color/white">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_grocery"
-                app:tint="@color/dark_grey"
-                android:id="@+id/habit_icon"
+                app:tint="@color/black"
+                android:id="@+id/food_icon"
                 android:padding="10dp"/>
         </com.google.android.material.card.MaterialCardView>
         <LinearLayout
@@ -56,7 +56,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Serving Size : "
-                    android:id="@+id/food_serving"
                     android:textColor="@color/black"
                     android:layout_marginLeft="2dp"
                     />
@@ -71,6 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="g"
+                    android:layout_marginLeft="2dp"
                     android:id="@+id/per_serving_measure"
                     android:textColor="@color/black"
                     />
@@ -82,22 +82,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Calories Per Serving: "
-                    android:id="@+id/food_serving"
+
                     android:textColor="@color/black"
                     android:layout_marginLeft="2dp"
                     />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100"
-                    android:id="@+id/per_serving"
+                    android:id="@+id/calories_per_serving"
                     android:textColor="@color/black"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="kcal"
-                    android:id="@+id/per_serving_measure"
+                    android:layout_marginLeft="2dp"
                     android:textColor="@color/black"
                     />
             </LinearLayout>
@@ -114,6 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="-"
+                android:textColor="@color/black"
                 android:gravity="center"
                 app:tint="@color/dark_grey"
                 android:id="@+id/sub_icon"
@@ -123,6 +128,7 @@
             android:layout_width="30sp"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/black"
             android:layout_marginHorizontal="5dp"
             android:textSize="20sp"
             android:layout_marginLeft="2dp"
@@ -142,7 +148,7 @@
                 android:layout_height="match_parent"
                 android:text="+"
                 android:gravity="center"
-                app:tint="@color/dark_grey"
+                app:tint="@color/black"
                 android:id="@+id/add_icon"
                 />
         </com.google.android.material.card.MaterialCardView>

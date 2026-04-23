@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="bottomSheetBgColor" format="color"/>
+    <attr name="actionButtonBackgroundColor" format="color"/>
+    <attr name="actionButtonForegroundColor" format="color"/>
+    <attr name="chipBackgroundActiveColor" format="color"/>
+    <attr name="chipBackgroundInactiveColor" format="color"/>
+    <attr name="chipIconActiveColor" format="color"/>
+    <attr name="chipIconInactiveColor" format="color"/>
+    <attr name="chipTextActiveColor" format="color"/>
+    <attr name="chipTextInactiveColor" format="color"/>
+    <attr name="heroButtonBackgroundColor" format="color"/>
+    <attr name="heroButtonTextColor" format="color"/>
+    <attr name="iconColor" format="color"/>
+    <attr name="iconBackgroundColor" format="color"/>
+    <attr name="sideButtonBackgroundColor" format="color"/>
+    <attr name="sideButtonTextColor" format="color"/>
     <attr name="cardBackgroundColor" format="color"/>
     <attr name="cardTextColor" format="color"/>
+    <attr name="dropdownBgColor" format="color"/>
+    <attr name="dropdownTextColor" format="color"/>
     <attr name="greyButtonColor" format="color"/>
+    <attr name="navigationBarBackground" format="color"/>
+    <attr name="optionsBackground" format="color"/>
+    <attr name="optionsForeground" format="color"/>
+    <attr name="navigationBarInactive" format="color"/>
+    <attr name="navigationBarActive" format="color"/>
+    <attr name="navigationBarRipple" format="color"/>
+    <attr name="overlayColor" format="color"/>
     <attr name="textColor" format="color"/>
+    iconBackgroundColor
 </resources>

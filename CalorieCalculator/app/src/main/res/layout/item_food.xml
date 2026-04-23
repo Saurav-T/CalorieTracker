@@ -20,7 +20,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             app:cardCornerRadius="20dp"
-            app:strokeWidth="0dp"
+            app:strokeWidth="1dp"
             app:cardBackgroundColor="@color/white">
 
             <ImageView
