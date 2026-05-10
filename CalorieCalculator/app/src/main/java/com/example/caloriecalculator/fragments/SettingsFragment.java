@@ -33,6 +33,7 @@ public class SettingsFragment extends Fragment {
     private TextInputLayout calorieIntakeLayout;
     private MaterialCardView saveButton, resetAppButton;
     private MaterialCardView exportCsvButton, importCsvButton;
+    private MaterialCardView profileButton, nutritionSummaryButton;
     private DatabaseHelper dbHelper;
     private ActivityResultLauncher<Intent> exportFileLauncher;
     private ActivityResultLauncher<String[]> permissionLauncher;
@@ -47,20 +48,17 @@ public class SettingsFragment extends Fragment {
 
         initViews(view);
         initActivityResultLaunchers();
-        loadSavedGoal();
         setupClickListeners();
 
         return view;
     }
 
     private void initViews(View view) {
-        calorieIntakeInput = view.findViewById(R.id.calorie_intake_reference);
-        calorieIntakeLayout = view.findViewById(R.id.calorie_intake_layout);
-        saveButton = view.findViewById(R.id.save);
+        profileButton = view.findViewById(R.id.profile);  // Fixed ID
+        nutritionSummaryButton = view.findViewById(R.id.nutrition_summary);
         resetAppButton = view.findViewById(R.id.reset_app);
         exportCsvButton = view.findViewById(R.id.export_csv);
         importCsvButton = view.findViewById(R.id.import_csv);
-
         dbHelper = new DatabaseHelper(requireContext());
     }
 
@@ -99,17 +97,30 @@ public class SettingsFragment extends Fragment {
                 });
     }
 
-    private void loadSavedGoal() {
-        SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE);
-        String savedGoal = prefs.getString("daily_calorie_goal", "");
-        calorieIntakeInput.setText(savedGoal);
-    }
-
     private void setupClickListeners() {
-        saveButton.setOnClickListener(v -> saveDailyGoal());
+        if (nutritionSummaryButton != null) {
+            nutritionSummaryButton.setOnClickListener(v -> openNutritionSummary());
+        }
+        profileButton.setOnClickListener(v -> openProfileEdit());
         resetAppButton.setOnClickListener(v -> showResetConfirmation());
         exportCsvButton.setOnClickListener(v -> checkStoragePermission());
         importCsvButton.setOnClickListener(v -> openImportFilePicker());
+    }
+
+    private void openProfileEdit() {
+        ProfileEditFragment profileFragment = ProfileEditFragment.newInstance();
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, profileFragment)
+                .addToBackStack("profile_edit")
+                .commit();
+    }
+
+    private void openNutritionSummary() {
+        NutritionSummaryFragment summaryFragment = NutritionSummaryFragment.newInstance();
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, summaryFragment)
+                .addToBackStack("nutrition_summary")
+                .commit();
     }
 
     private void checkStoragePermission() {
@@ -199,34 +210,6 @@ public class SettingsFragment extends Fragment {
                 }
             });
         }).start();
-    }
-    private void saveDailyGoal() {
-        String goalStr = calorieIntakeInput.getText().toString().trim();
-
-        if (goalStr.isEmpty()) {
-            calorieIntakeLayout.setError("Please enter a goal");
-            return;
-        }
-
-        try {
-            double dailyGoal = Double.parseDouble(goalStr);
-            if (dailyGoal <= 0) {
-                calorieIntakeLayout.setError("Goal must be greater than 0");
-                return;
-            }
-
-            SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE);
-            prefs.edit()
-                    .putString("daily_calorie_goal", goalStr)
-                    .putBoolean("has_completed_onboarding", true)
-                    .apply();
-
-            calorieIntakeLayout.setError(null);
-            Toast.makeText(getContext(), "✅ Goal saved: " + goalStr + " kcal", Toast.LENGTH_SHORT).show();
-
-        } catch (NumberFormatException e) {
-            calorieIntakeLayout.setError("Enter valid number");
-        }
     }
 
     private void showResetConfirmation() {

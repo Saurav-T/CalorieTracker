@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="color" name="actionButtonBackgroundColor"/>
+    <attr format="color" name="actionButtonForegroundColor"/>
+    <attr format="color" name="bottomSheetBgColor"/>
+    <attr format="color" name="cardBackgroundColor"/>
+    <attr format="color" name="cardTextColor"/>
+    <attr format="color" name="chipBackgroundActiveColor"/>
+    <attr format="color" name="chipBackgroundInactiveColor"/>
+    <attr format="color" name="chipIconActiveColor"/>
+    <attr format="color" name="chipIconInactiveColor"/>
+    <attr format="color" name="chipTextActiveColor"/>
+    <attr format="color" name="chipTextInactiveColor"/>
+    <attr format="color" name="dropdownBgColor"/>
+    <attr format="color" name="dropdownTextColor"/>
+    <attr format="color" name="greyButtonColor"/>
+    <attr format="color" name="heroButtonBackgroundColor"/>
+    <attr format="color" name="heroButtonTextColor"/>
+    <attr format="color" name="iconBackgroundColor"/>
+    <attr format="color" name="iconColor"/>
+    <attr format="color" name="navigationBarActive"/>
+    <attr format="color" name="navigationBarBackground"/>
+    <attr format="color" name="navigationBarInactive"/>
+    <attr format="color" name="navigationBarRipple"/>
+    <attr format="color" name="optionsBackground"/>
+    <attr format="color" name="optionsForeground"/>
+    <attr format="color" name="overlayColor"/>
+    <attr format="color" name="secondaryCardBackgroundColor"/>
+    <attr format="color" name="secondaryCardTextColor"/>
+    <attr format="color" name="sideButtonBackgroundColor"/>
+    <attr format="color" name="sideButtonTextColor"/>
+    <attr format="color" name="textColor"/>
+    <color name="black">#FF000000</color>
+    <color name="blue">#004AAD</color>
+    <color name="dark_grey">#6F6F6F</color>
+    <color name="green">#00A651</color>
+    <color name="grey">#F0F0F0</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="ink_black">#212122</color>
+    <color name="light_grey">#D9D9D9</color>
+    <color name="medium_grey">#808080</color>
+    <color name="purple">#8C52FF</color>
+    <color name="red">#FF5757</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">Calqo</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <style name="Base.Theme.CalorieCalculator" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="actionButtonBackgroundColor">@color/black</item>
+        <item name="actionButtonForegroundColor">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="bottomSheetBgColor">@color/white</item>
+        <item name="cardBackgroundColor">@color/black</item>
+        <item name="cardTextColor">@color/white</item>
+        <item name="chipBackgroundActiveColor">@color/black</item>
+        <item name="chipBackgroundInactiveColor">@color/light_grey</item>
+        <item name="chipIconActiveColor">@color/white</item>
+        <item name="chipIconInactiveColor">@color/dark_grey</item>
+        <item name="chipTextActiveColor">@color/white</item>
+        <item name="chipTextInactiveColor">@color/dark_grey</item>
+        <item name="dropdownTextColor">@color/black</item>
+        <item name="dropdownBgColor">@color/grey</item>
+        <item name="iconColor">@color/black</item>
+        <item name="iconBackgroundColor">@color/grey</item>
+        <item name="heroButtonBackgroundColor">@color/black</item>
+        <item name="heroButtonTextColor">@color/white</item>
+        <item name="navigationBarBackground">@color/black</item>
+        <item name="navigationBarActive">@color/white</item>
+        <item name="navigationBarInactive">@color/medium_grey</item>
+        <item name="navigationBarRipple">@color/dark_grey</item>
+        <item name="overlayColor">@color/medium_grey</item>
+        <item name="optionsBackground">@color/light_grey</item>
+        <item name="optionsForeground">@color/black</item>
+        <item name="secondaryCardBackgroundColor">@color/medium_grey</item>
+        <item name="secondaryCardTextColor">@color/white</item>
+        <item name="sideButtonBackgroundColor">@color/dark_grey</item>
+        <item name="sideButtonTextColor">@color/white</item>
+        <item name="textColor">@color/black</item>
+    </style>
+    <style name="DropdownFixTheme">
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorHint">@color/dark_grey</item>
+    </style>
+    <style name="Theme.CalorieCalculator" parent="Base.Theme.CalorieCalculator"/>
+</resources>

@@ -35,6 +35,7 @@ public class ProfileSetupFragment extends Fragment {
 
         initViews(view);
         setupActivityDropdown();
+        loadExistingProfile();        // 🔥 Pre-fill if user already has data
         setupSaveButton();
 
         return view;
@@ -55,58 +56,65 @@ public class ProfileSetupFragment extends Fragment {
 
     private void setupActivityDropdown() {
         String[] activities = {
-                "Sedentary",
-                "Lightly Active",
-                "Moderately Active",
-                "Very Active",
-                "Extra Active"
+                "Sedentary", "Lightly Active", "Moderately Active",
+                "Very Active", "Extra Active"
         };
 
         setupDropdown(activityLevelInput, activities, "Select Activity Level");
     }
 
-    // 🔥 Reusable Improved Dropdown Method
-    private void setupDropdown(MaterialAutoCompleteTextView autoCompleteTextView,
-                               String[] items, String hint) {
+    private void setupDropdown(MaterialAutoCompleteTextView autoComplete, String[] items, String hint) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_list_item_1, items);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_list_item_1,
-                items
-        );
+        autoComplete.setAdapter(adapter);
+        autoComplete.setThreshold(0);
+        autoComplete.setHint(hint);
 
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(0);           // Show immediately
-        autoCompleteTextView.setHint(hint);
-
-        // Background for dropdown
-        try {
-            autoCompleteTextView.setDropDownBackgroundResource(R.drawable.dropdown_background);
-        } catch (Exception e) {
-            // Fallback if drawable doesn't exist
-            autoCompleteTextView.setDropDownBackgroundResource(android.R.color.white);
-        }
-
-        // SINGLE TAP → Show dropdown
-        autoCompleteTextView.setOnClickListener(v -> {
-            autoCompleteTextView.showDropDown();
-        });
-
-        // Touch listener
-        autoCompleteTextView.setOnTouchListener((v, event) -> {
-            autoCompleteTextView.showDropDown();
+        autoComplete.setOnClickListener(v -> autoComplete.showDropDown());
+        autoComplete.setOnTouchListener((v, event) -> {
+            autoComplete.showDropDown();
             return false;
         });
-
-        // Focus → Auto show
-        autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                autoCompleteTextView.post(() -> autoCompleteTextView.showDropDown());
-            }
+        autoComplete.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) autoComplete.post(() -> autoComplete.showDropDown());
         });
+    }
 
-        // Optional: Prevent free typing
-        // autoCompleteTextView.setKeyListener(null);
+    /** 🔥 Load existing profile data (makes this fragment reusable for editing) */
+    private void loadExistingProfile() {
+        UserProfile profile = NutritionCalculator.loadProfile(requireContext());
+
+        if (profile.getAge() > 0) {
+            ageInput.setText(String.valueOf(profile.getAge()));
+        }
+        if (profile.getWeightKg() > 0) {
+            weightInput.setText(String.format("%.1f", profile.getWeightKg()));
+        }
+        if (profile.getHeightCm() > 0) {
+            heightInput.setText(String.valueOf((int) profile.getHeightCm()));
+        }
+
+        // Gender
+        if ("male".equalsIgnoreCase(profile.getGender())) {
+            radioMale.setChecked(true);
+        } else if ("female".equalsIgnoreCase(profile.getGender())) {
+            radioFemale.setChecked(true);
+        }
+
+        // Activity Level
+        if (profile.getActivityLevel() != null && !profile.getActivityLevel().isEmpty()) {
+            activityLevelInput.setText(profile.getActivityLevel());
+        }
+
+        // Goal
+        if ("weight loss".equalsIgnoreCase(profile.getGoal())) {
+            radioLoss.setChecked(true);
+        } else if ("weight gain".equalsIgnoreCase(profile.getGoal())) {
+            radioGain.setChecked(true);
+        } else {
+            radioMaintain.setChecked(true);
+        }
     }
 
     private void setupSaveButton() {
@@ -115,6 +123,18 @@ public class ProfileSetupFragment extends Fragment {
                 UserProfile profile = createProfile();
                 NutritionCalculator.saveProfile(requireContext(), profile);
 
+                // Calculate and save daily goal for HomeFragment
+                NutritionCalculator.DailyRecommendation rec = NutritionCalculator.calculate(profile);
+                if (rec != null) {
+                    requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE)
+                            .edit()
+                            .putString("daily_calorie_goal", String.valueOf(rec.dailyCalories))
+                            .apply();
+                }
+
+                Toast.makeText(requireContext(), "✅ Profile saved successfully!", Toast.LENGTH_SHORT).show();
+
+                // Go to Result Preview
                 ResultPreviewFragment resultFragment = ResultPreviewFragment.newInstance(profile);
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, resultFragment)
@@ -125,15 +145,43 @@ public class ProfileSetupFragment extends Fragment {
     }
 
     private boolean validateInputs() {
-        if (ageInput.getText().toString().trim().isEmpty() ||
-                weightInput.getText().toString().trim().isEmpty() ||
-                heightInput.getText().toString().trim().isEmpty() ||
-                activityLevelInput.getText().toString().trim().isEmpty() ||
-                (!radioMale.isChecked() && !radioFemale.isChecked())) {
+        String ageStr = ageInput.getText().toString().trim();
+        String weightStr = weightInput.getText().toString().trim();
+        String heightStr = heightInput.getText().toString().trim();
+        String activityStr = activityLevelInput.getText().toString().trim();
 
+        if (ageStr.isEmpty() || weightStr.isEmpty() || heightStr.isEmpty() || activityStr.isEmpty()) {
             Toast.makeText(getContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (!radioMale.isChecked() && !radioFemale.isChecked()) {
+            Toast.makeText(getContext(), "Please select your gender", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        try {
+            int age = Integer.parseInt(ageStr);
+            double weight = Double.parseDouble(weightStr);
+            double height = Double.parseDouble(heightStr);
+
+            if (age < 12 || age > 100) {
+                Toast.makeText(getContext(), "Age should be between 12-100", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (weight < 30 || weight > 200) {
+                Toast.makeText(getContext(), "Weight should be between 30-200 kg", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (height < 140 || height > 220) {
+                Toast.makeText(getContext(), "Height should be between 140-220 cm", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Please enter valid numbers", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
     }
 

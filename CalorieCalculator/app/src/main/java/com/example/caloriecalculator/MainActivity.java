@@ -153,4 +153,13 @@ public class MainActivity extends AppCompatActivity {
         prefs.clear();   // This will reset both dietary and category to "All"
         Log.d("MainActivity", "🔄 Filters reset to All on app restart");
     }
+
+    // Add to MainActivity.java
+    public void refreshHomeFragment() {
+        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager()
+                .findFragmentByTag("home_fragment");
+        if (homeFragment != null) {
+            homeFragment.refreshData();
+        }
+    }
 }

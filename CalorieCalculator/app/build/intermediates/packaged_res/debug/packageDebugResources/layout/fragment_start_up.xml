@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.StartUpFragment">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vl_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vr_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ht_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/hb_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/parisienne"
+        android:text="@string/app_name"
+        android:textColor="?attr/textColor"
+        android:id="@+id/app_logo"
+        android:textSize="100sp"
+        app:layout_constraintEnd_toStartOf="@+id/vr_guideline"
+        app:layout_constraintStart_toStartOf="@+id/vl_guideline"
+        app:layout_constraintTop_toTopOf="@+id/ht_guideline" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Your Personal Nutrition Guide"
+        android:textColor="?attr/textColor"
+        android:layout_marginTop="10dp"
+        android:id="@+id/sub_title"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/vr_guideline"
+        app:layout_constraintStart_toStartOf="@+id/vl_guideline"
+        app:layout_constraintTop_toBottomOf="@id/app_logo" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="BMI • Calories • Macros • Goals"
+        android:textColor="?attr/textColor"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/vr_guideline"
+        app:layout_constraintStart_toStartOf="@+id/vl_guideline"
+        app:layout_constraintTop_toBottomOf="@id/sub_title" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/get_started"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="?attr/cardBackgroundColor"
+        app:cardCornerRadius="75dp"
+        app:layout_constraintBottom_toTopOf="@id/hb_guideline"
+        app:layout_constraintEnd_toStartOf="@id/vr_guideline"
+        app:layout_constraintStart_toEndOf="@id/vl_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:strokeWidth="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:text="Get Started"
+            android:textColor="?attr/cardTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Eat Better. Track Smarter."
+        android:textColor="?attr/textColor"
+        android:textSize="16sp"
+
+        app:layout_constraintBottom_toTopOf="@+id/hb_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/vr_guideline"
+        app:layout_constraintStart_toStartOf="@+id/vl_guideline" />
+</androidx.constraintlayout.widget.ConstraintLayout>
