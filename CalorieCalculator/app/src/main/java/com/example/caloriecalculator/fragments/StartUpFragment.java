@@ -35,7 +35,6 @@ public class StartUpFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        rangeMin = view.findViewById(R.id.rangeMin);
         getStartedButton = view.findViewById(R.id.get_started);
     }
 
@@ -44,19 +43,10 @@ public class StartUpFragment extends Fragment {
     }
 
     private void handleGetStarted() {
-        String dailyGoalInput = rangeMin.getText().toString().trim();
-        String dailyGoalToSave = TextUtils.isEmpty(dailyGoalInput) ? "-" : dailyGoalInput;
-
-        // Store daily goal in SharedPreferences
-        getActivity().getSharedPreferences("app_prefs", getActivity().MODE_PRIVATE)
-                .edit()
-                .putString("daily_calorie_goal", dailyGoalToSave)
-                .putBoolean("has_completed_onboarding", true)
-                .apply();
-
-        // Complete onboarding and navigate to home
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).completeOnboarding();
-        }
+        ProfileSetupFragment profileFragment = ProfileSetupFragment.newInstance();
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, profileFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

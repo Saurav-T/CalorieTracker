@@ -28,6 +28,8 @@
         <item name="overlayColor">@color/light_grey</item>
         <item name="optionsBackground">@color/medium_grey</item>
         <item name="optionsForeground">@color/white</item>
+        <item name="secondaryCardBackgroundColor">@color/medium_grey</item>
+        <item name="secondaryCardTextColor">@color/white</item>
         <item name="textColor">@color/white</item>
     </style>
     <style name="DropdownFixTheme">

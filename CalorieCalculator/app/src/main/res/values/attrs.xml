@@ -27,6 +27,8 @@
     <attr name="navigationBarActive" format="color"/>
     <attr name="navigationBarRipple" format="color"/>
     <attr name="overlayColor" format="color"/>
+    <attr name="secondaryCardBackgroundColor" format="color"/>
+    <attr name="secondaryCardTextColor" format="color"/>
     <attr name="textColor" format="color"/>
     iconBackgroundColor
 </resources>

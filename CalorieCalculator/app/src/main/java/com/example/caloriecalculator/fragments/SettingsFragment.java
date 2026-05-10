@@ -277,8 +277,16 @@ public class SettingsFragment extends Fragment {
 
     private void refreshHomeFragment() {
         Fragment homeFragment = getParentFragmentManager().findFragmentById(R.id.fragment_container);
+
         if (homeFragment instanceof HomeFragment) {
-            ((HomeFragment) homeFragment).refreshData();
+            HomeFragment home = (HomeFragment) homeFragment;
+            home.refreshData();           // This already exists in your HomeFragment
+        } else {
+            // If HomeFragment is not currently visible, reload it
+            HomeFragment newHome = new HomeFragment();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, newHome)
+                    .commit();
         }
     }
 }

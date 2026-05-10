@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "CalorieCalculator.db";
 
     public static final String CSV_EXPORT_FILENAME = "food_items_export.csv";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     // Food table
     public static final String TABLE_FOOD = "food_items";
