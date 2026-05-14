@@ -112,7 +112,7 @@ public class CalculationFragment extends Fragment implements CalculationItemsAda
             foodItems.add(calcItem.foodItem);
         }
 
-        adapter.updateItems(foodItems); // Convert to FoodItem list
+        adapter.updateItems(foodItems);
         foodList.setAdapter(adapter);
         updateNutritionTotals();
     }
@@ -153,11 +153,9 @@ public class CalculationFragment extends Fragment implements CalculationItemsAda
         }
         meal.setFoodItems(mealFoods);
 
-        // 🔥 SAVE TO DB
         long mealId = dbHelper.insertMeal(meal);
         Log.d(TAG, "💾 SAVED meal ID: " + mealId + " (" + meal.getTotalCalories() + " kcal)");
 
-        // 🔥 GO TO HOME (clear backstack)
         Intent intent = new Intent(requireContext(), MainActivity.class);
         startActivity(intent);
     }

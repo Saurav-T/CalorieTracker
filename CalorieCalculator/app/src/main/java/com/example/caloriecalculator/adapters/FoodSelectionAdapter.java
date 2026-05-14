@@ -26,9 +26,8 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
     private List<FoodItem> foodList;
     private Set<Long> selectedItems = new HashSet<>();
     private OnItemSelectionChangedListener listener;
-    private OnItemClickListener itemClickListener; // For bottomsheet
+    private OnItemClickListener itemClickListener;
 
-    // 🔥 Filter state (same as FoodFragment)
     private String currentDietaryFilter = "All";
     private String currentCategoryFilter = "All";
 
@@ -74,7 +73,6 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
         this.itemClickListener = listener;
     }
 
-    // 🔥 Filter methods
     public void setFilters(String dietaryFilter, String categoryFilter) {
         this.currentDietaryFilter = dietaryFilter;
         this.currentCategoryFilter = categoryFilter;
@@ -120,13 +118,13 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
         }
 
         public void bind(FoodItem foodItem) {
-            // Set food details
+            // Food details
             foodName.setText(foodItem.getName());
             perServing.setText(foodItem.getServingSize());
             perServingMeasure.setText(foodItem.getUnit() != null ? foodItem.getUnit() : "g");
             caloriesPerServing.setText(foodItem.getCalories());
 
-            // Set category icon
+            // Category icon
             if (foodItem.getCategoryIcon() != 0) {
                 habitIcon.setImageResource(foodItem.getCategoryIcon());
             } else {
@@ -138,10 +136,9 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
             boolean isSelected = selectedItems.contains(foodItem.getId());
             selectionCheckbox.setChecked(isSelected);
 
-            // 🔥 Click handling - Checkbox toggle vs Full item click
+            // Click handling
             itemView.setOnClickListener(v -> {
                 if (itemClickListener != null) {
-                    // Show bottomsheet (like FoodFragment)
                     itemClickListener.onItemClick(foodItem);
                 }
             });

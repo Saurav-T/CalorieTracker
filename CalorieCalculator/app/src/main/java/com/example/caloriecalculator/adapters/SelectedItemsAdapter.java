@@ -79,7 +79,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
         public SelectedItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Your exact IDs from layout
+
             habitIcon = itemView.findViewById(R.id.habit_icon);
             foodName = itemView.findViewById(R.id.food_name);
             perServing = itemView.findViewById(R.id.per_serving);
@@ -87,7 +87,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
             caloriesPerServing = itemView.findViewById(R.id.calories_per_serving);
             removeIcon = itemView.findViewById(R.id.remove_icon);
 
-            // Remove button click
+
             itemView.findViewById(R.id.remove).setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && removeListener != null) {

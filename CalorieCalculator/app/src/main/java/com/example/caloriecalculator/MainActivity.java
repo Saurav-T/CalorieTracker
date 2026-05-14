@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         initPreferences();
         setupBottomNavigation();
         resetFiltersOnAppStart();
-
-        // Load initial fragment based on onboarding status
         loadInitialFragment();
     }
 
@@ -81,11 +79,9 @@ public class MainActivity extends AppCompatActivity {
         boolean hasCompletedOnboarding = prefs.getBoolean("has_completed_onboarding", false);
 
         if (hasCompletedOnboarding) {
-            // Show home fragment and select home tab
             loadFragment(getOrCreateHomeFragment());
             nav.setSelectedItemId(R.id.nav_home);
         } else {
-            // Show startup fragment and hide bottom navigation
             loadFragment(new StartUpFragment());
             nav.setVisibility(View.GONE);
         }
@@ -115,18 +111,15 @@ public class MainActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
-        // Only add to backstack for navigation fragments, not onboarding
         if (!(fragment instanceof StartUpFragment)) {
             transaction.addToBackStack(null);
         }
         transaction.commit();
     }
 
-    // Call this method when onboarding is completed (from StartUpFragment)
     public void completeOnboarding() {
         prefs.edit().putBoolean("has_completed_onboarding", true).apply();
 
-        // Fade in bottom navigation smoothly
         nav.setVisibility(View.VISIBLE);
         nav.setAlpha(0f);
         nav.animate()
@@ -135,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
                 .start();
 
-        // Smooth FADE transition to HomeFragment
         Fragment homeFragment = getOrCreateHomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -143,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
 
-        // Select home tab after fade completes
+
         new android.os.Handler().postDelayed(() -> {
             nav.setSelectedItemId(R.id.nav_home);
         }, 200);
@@ -154,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "🔄 Filters reset to All on app restart");
     }
 
-    // Add to MainActivity.java
     public void refreshHomeFragment() {
         HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager()
                 .findFragmentByTag("home_fragment");

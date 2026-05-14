@@ -29,7 +29,6 @@ public class NutritionSummaryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 🔥 Load existing profile
         profile = NutritionCalculator.loadProfile(requireContext());
     }
 
@@ -38,10 +37,8 @@ public class NutritionSummaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result_preview, container, false);
 
         initViews(view);
-        setupTitle(view);  // 🔥 Change title to "Nutrition Summary"
+        setupTitle(view);
         calculateAndDisplayResults();
-
-        // 🔥 Change button to "Edit Profile"
         MaterialCardView continueButton = view.findViewById(R.id.continuebutton);
         continueButton.setVisibility(View.GONE);
 
@@ -57,7 +54,6 @@ public class NutritionSummaryFragment extends Fragment {
         fatsText = view.findViewById(R.id.fats);
     }
 
-    /** 🔥 Set title to "Nutrition Summary" */
     private void setupTitle(View view) {
         TextView title = view.findViewById(R.id.title);
         if (title != null) {
@@ -77,7 +73,6 @@ public class NutritionSummaryFragment extends Fragment {
             return;
         }
 
-        // ✅ Display results
         safeSetText(bmiText, String.format("BMI: %.1f (%s)", rec.bmi, rec.bmiCategory));
         safeSetText(healthyRangeText, rec.healthyWeightRange);
         safeSetText(caloriesText, rec.dailyCalories + " kcal/day");
@@ -86,7 +81,6 @@ public class NutritionSummaryFragment extends Fragment {
         safeSetText(fatsText,  + rec.fatG + "g");
     }
 
-    /** 🔥 Show message if no profile exists */
     private void showNoProfileMessage() {
         safeSetText(bmiText, "N/A");
         safeSetText(healthyRangeText, "Complete your profile to see nutrition summary");
@@ -102,14 +96,12 @@ public class NutritionSummaryFragment extends Fragment {
         Toast.makeText(getContext(), "⚠️ " + message, Toast.LENGTH_SHORT).show();
     }
 
-    /** 🔥 Safe text setting */
     private void safeSetText(TextView textView, String text) {
         if (textView != null) {
             textView.setText(text);
         }
     }
 
-    /** 🔥 Go to Profile Edit */
     private void openProfileEdit() {
         ProfileEditFragment profileFragment = ProfileEditFragment.newInstance();
         requireActivity().getSupportFragmentManager().beginTransaction()

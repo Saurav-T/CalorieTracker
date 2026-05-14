@@ -71,7 +71,6 @@ public class FoodSelectionFragment extends Fragment implements FoodSelectionAdap
         super.onCreate(savedInstanceState);
         Log.d(TAG, "🔥 onCreate - Setting up filter listener");
 
-        // 🔥 FilterBottomSheet listener (same as FoodFragment)
         getParentFragmentManager().setFragmentResultListener("filter_applied", this,
                 (requestKey, result) -> {
                     currentDietaryFilter = result.getString("dietary_filter", "All");
@@ -154,7 +153,6 @@ public class FoodSelectionFragment extends Fragment implements FoodSelectionAdap
         foodAdapter = new FoodSelectionAdapter(initialList);
         foodAdapter.setOnItemSelectionChangedListener(this);
         foodAdapter.setOnItemClickListener(foodItem -> {
-            // 🔥 SAME bottomsheet as FoodFragment
             com.example.caloriecalculator.bottomsheets.FoodBottomSheetFragment bottomSheet =
                     com.example.caloriecalculator.bottomsheets.FoodBottomSheetFragment.newInstance(foodItem);
             bottomSheet.show(getParentFragmentManager(), "FoodBottomSheet");
@@ -164,7 +162,6 @@ public class FoodSelectionFragment extends Fragment implements FoodSelectionAdap
     }
 
     private void setupClickListeners() {
-        // Filter button
         filterButton.setOnClickListener(v -> {
             Log.d(TAG, "🔍 Filter button clicked");
             Log.d(TAG, "🔍 Filter button clicked");
@@ -172,7 +169,6 @@ public class FoodSelectionFragment extends Fragment implements FoodSelectionAdap
             filterSheet.show(getParentFragmentManager(), "FilterBottomSheet");
         });
 
-        // View button - shows selected items
         viewButton.setOnClickListener(v -> {
             List<FoodItem> selected = foodAdapter.getSelectedItems();
             Log.d(TAG, "👁️ Opening bottomsheet with " + selected.size() + " selected items");
@@ -183,8 +179,6 @@ public class FoodSelectionFragment extends Fragment implements FoodSelectionAdap
             bottomSheet.show(getParentFragmentManager(), "SelectedItemsBottomSheet");
         });
 
-        // Select/Confirm button
-        // In FoodSelectionFragment.setupClickListeners()
         selectButton.setOnClickListener(v -> {
             List<FoodItem> selected = foodAdapter.getSelectedItems();
             if (!selected.isEmpty()) {
@@ -247,7 +241,6 @@ public class FoodSelectionFragment extends Fragment implements FoodSelectionAdap
         searchSelectFood.setHint(hint);
     }
 
-    // 🔥 FoodSelectionAdapter callback
     @Override
     public void onSelectionChanged(int selectedCount) {
         selectedItemsNumber.setText(String.valueOf(selectedCount));
@@ -279,21 +272,4 @@ public class FoodSelectionFragment extends Fragment implements FoodSelectionAdap
         searchHelper.updateFoods(updatedList);
         applyFilters(currentSearchQuery);
     }
-
-    // Filter methods (for future FilterBottomSheet integration)
-//    public void onFilterApplied(String dietaryFilter, String categoryFilter) {
-//        currentDietaryFilter = dietaryFilter;
-//        currentCategoryFilter = categoryFilter;
-//        isFilteringActive = true;
-//        applyFilters(currentSearchQuery);
-//    }
-//
-//    public void clearFilters() {
-//        Log.d(TAG, "🧹 Clearing all filters");
-//        isFilteringActive = false;
-//        currentDietaryFilter = "All";
-//        currentCategoryFilter = "All";
-//        applyFilters(currentSearchQuery);
-//    }
-
 }

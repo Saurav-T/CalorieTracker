@@ -54,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Meal Columns
     public static final String MEAL_ID = "_id";
     public static final String MEAL_NAME = "meal_name";
-    public static final String MEAL_TIMESTAMP = "timestamp";  // Unix ms (long)
+    public static final String MEAL_TIMESTAMP = "timestamp";
     public static final String MEAL_TOTAL_CALORIES = "total_calories";
     public static final String MEAL_TOTAL_FATS = "total_fats";
     public static final String MEAL_TOTAL_PROTEIN = "total_protein";
@@ -82,14 +82,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_FATS + " TEXT, " +
             COLUMN_PROTEIN + " TEXT, " +
             COLUMN_CARBS + " TEXT," +
-            COLUMN_CATEGORY_ICON + " INTEGER" +  // ← ADD THIS
+            COLUMN_CATEGORY_ICON + " INTEGER" +
             ")" ;
 
     private static final String CREATE_MEALS_TABLE =
             "CREATE TABLE " + TABLE_MEALS + " (" +
                     MEAL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     MEAL_NAME + " TEXT NOT NULL, " +
-                    MEAL_TIMESTAMP + " INTEGER NOT NULL, " +  // ✅ Long timestamp
+                    MEAL_TIMESTAMP + " INTEGER NOT NULL, " +
                     MEAL_TOTAL_CALORIES + " REAL NOT NULL, " +
                     MEAL_TOTAL_FATS + " REAL NOT NULL, " +
                     MEAL_TOTAL_PROTEIN + " REAL NOT NULL, " +
@@ -103,9 +103,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     MEAL_FOOD_FOOD_ID + " INTEGER NOT NULL, " +
                     MEAL_FOOD_SERVING_SIZE + " REAL NOT NULL, " +
                     MEAL_FOOD_ITEM_CALORIES + " REAL NOT NULL, " +
-                    MEAL_FOOD_ITEM_FATS + " REAL NOT NULL, " +           // ✅ NEW
-                    MEAL_FOOD_ITEM_PROTEIN + " REAL NOT NULL, " +         // ✅ NEW
-                    MEAL_FOOD_ITEM_CARBS + " REAL NOT NULL, " +           // ✅ NEW
+                    MEAL_FOOD_ITEM_FATS + " REAL NOT NULL, " +
+                    MEAL_FOOD_ITEM_PROTEIN + " REAL NOT NULL, " +
+                    MEAL_FOOD_ITEM_CARBS + " REAL NOT NULL, " +
                     "FOREIGN KEY(" + MEAL_FOOD_MEAL_ID + ") REFERENCES " + TABLE_MEALS + "(" + MEAL_ID + "), " +
                     "FOREIGN KEY(" + MEAL_FOOD_FOOD_ID + ") REFERENCES " + TABLE_FOOD + "(" + COLUMN_ID + ")" +
                     ")";
@@ -125,12 +125,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 3) {
-            // ✅ ONLY add new columns - DON'T drop or recreate tables!
             db.execSQL("ALTER TABLE " + TABLE_MEAL_FOODS + " ADD COLUMN " + MEAL_FOOD_ITEM_FATS + " REAL NOT NULL DEFAULT 0");
             db.execSQL("ALTER TABLE " + TABLE_MEAL_FOODS + " ADD COLUMN " + MEAL_FOOD_ITEM_PROTEIN + " REAL NOT NULL DEFAULT 0");
             db.execSQL("ALTER TABLE " + TABLE_MEAL_FOODS + " ADD COLUMN " + MEAL_FOOD_ITEM_CARBS + " REAL NOT NULL DEFAULT 0");
         }
-        // ✅ REMOVE all DROP TABLE and onCreate(db) calls from onUpgrade!
     }
 
     // Insert new food item
@@ -252,7 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(MEAL_NAME, meal.getMealName());
-        values.put(MEAL_TIMESTAMP, meal.getTimestamp());  // ✅ Long
+        values.put(MEAL_TIMESTAMP, meal.getTimestamp());
         values.put(MEAL_TOTAL_CALORIES, meal.getTotalCalories());
         values.put(MEAL_TOTAL_FATS, meal.getTotalFats());
         values.put(MEAL_TOTAL_PROTEIN, meal.getTotalProtein());
@@ -270,7 +268,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             foodValues.put(MEAL_FOOD_FOOD_ID, foodItem.foodItem.getId());
             foodValues.put(MEAL_FOOD_SERVING_SIZE, foodItem.servingSize);
 
-            // ✅ Store HISTORICAL values at calculation time
             try {
                 foodValues.put(MEAL_FOOD_ITEM_CALORIES, Double.parseDouble(foodItem.foodItem.getCalories()));
                 foodValues.put(MEAL_FOOD_ITEM_FATS, Double.parseDouble(foodItem.foodItem.getFats()));

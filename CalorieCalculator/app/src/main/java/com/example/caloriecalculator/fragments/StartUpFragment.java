@@ -20,7 +20,6 @@ public class StartUpFragment extends Fragment {
     private MaterialCardView getStartedButton;
 
     public StartUpFragment() {
-        // Required empty public constructor
     }
 
     @Override

@@ -38,7 +38,6 @@ public class SelectedItemsBottomSheetFragment extends BottomSheetDialogFragment
     public static SelectedItemsBottomSheetFragment newInstance(List<FoodItem> selectedItems) {
         SelectedItemsBottomSheetFragment fragment = new SelectedItemsBottomSheetFragment();
         Bundle args = new Bundle();
-        // ✅ Using Serializable (your FoodItem already implements it)
         args.putSerializable(ARG_SELECTED_ITEMS, new ArrayList<>(selectedItems));
         fragment.setArguments(args);
         return fragment;
@@ -61,13 +60,10 @@ public class SelectedItemsBottomSheetFragment extends BottomSheetDialogFragment
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(R.attr.bottomSheetBgColor, typedValue, true);
 
-        // CUSTOMIZE: Remove bottom padding + set background
         dialog.setOnShowListener(d -> {
             FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet != null) {
-                // Remove bottom padding
                 bottomSheet.setPadding(0, 0, 0, 0);
-                // Set custom background color
                 bottomSheet.setBackgroundColor(typedValue.data);
             }
         });
@@ -90,7 +86,6 @@ public class SelectedItemsBottomSheetFragment extends BottomSheetDialogFragment
     private void loadSelectedItems() {
         originalItems = new ArrayList<>();
         if (getArguments() != null) {
-            // ✅ Cast Serializable to List<FoodItem>
             @SuppressWarnings("unchecked")
             List<FoodItem> items = (List<FoodItem>) getArguments().getSerializable(ARG_SELECTED_ITEMS);
             Log.d(TAG, "📦 Loaded " + (items != null ? items.size() : 0) + " selected items");
@@ -130,15 +125,10 @@ public class SelectedItemsBottomSheetFragment extends BottomSheetDialogFragment
         adapter.removeItem(position);
         toggleEmptyState(adapter.getItemCount() == 0);
 
-        // 🔥 Fragment Result API - notify parent about removal
         Bundle result = new Bundle();
         result.putLong("removed_item_id", foodItem.getId());
         getParentFragmentManager().setFragmentResult("item_removed", result);
 
         Log.d(TAG, "📤 Sent removal notification for item ID: " + foodItem.getId());
-    }
-
-    public interface OnSelectionChangedListener {
-        void onSelectionUpdated(List<FoodItem> updatedSelection);
     }
 }

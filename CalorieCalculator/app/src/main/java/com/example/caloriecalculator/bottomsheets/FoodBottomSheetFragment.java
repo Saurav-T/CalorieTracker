@@ -71,13 +71,11 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(R.attr.bottomSheetBgColor, typedValue, true);
 
-        // CUSTOMIZE: Remove bottom padding + set background
+
         dialog.setOnShowListener(d -> {
             FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet != null) {
-                // Remove bottom padding
                 bottomSheet.setPadding(0, 0, 0, 0);
-                // Set custom background color
                 bottomSheet.setBackgroundColor(typedValue.data);
 
             }

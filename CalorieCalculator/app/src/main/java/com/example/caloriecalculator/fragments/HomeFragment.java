@@ -66,8 +66,6 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        // ✅ Keep existing meal deletion listener
         getParentFragmentManager().setFragmentResultListener("meal_deleted", this,
                 (requestKey, result) -> refreshData());
     }
@@ -76,10 +74,10 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        bindViews(fragmentView); // ✅ Updated to include new views
+        bindViews(fragmentView);
         initDatabase();
         setupRecyclerView();
-        loadTodayStats(); // ✅ This now handles insights too!
+        loadTodayStats();
         setupClickListeners();
 
         return fragmentView;
@@ -98,14 +96,10 @@ public class HomeFragment extends Fragment {
         todayDay = view.findViewById(R.id.today_day);
         goalCalorie = view.findViewById(R.id.goal_calorie);
         recentMealsRecycler = view.findViewById(R.id.recent_meals_recycler);
-
-        // ✅ NEW insight views
         insightEmoji = view.findViewById(R.id.insight_emoji);
         insightScore = view.findViewById(R.id.insight_score);
         insightStatus = view.findViewById(R.id.insight_status);
         insightRecommendation = view.findViewById(R.id.insight_recommendation);
-
-        // ✅ Overlay for empty recent meals
         overlay = view.findViewById(R.id.overlay);
     }
 
@@ -128,12 +122,10 @@ public class HomeFragment extends Fragment {
         bottomSheet.show(getParentFragmentManager(), "MealDetailsBottomSheet");
     }
 
-    /** 🔥 MAIN METHOD - Enhanced to handle insights + goal from profile! */
     private void loadTodayStats() {
         if (totalCalorieToday == null) return;
 
-        // ✅ FIXED: Only get TODAY'S meals (CRITICAL BUG FIX)
-        List<MealItem> todayMeals = dbHelper.getTodayMeals(); // ✅ Use this method!
+        List<MealItem> todayMeals = dbHelper.getTodayMeals();
         double totalCal = 0, carbs = 0, protein = 0, fats = 0;
 
         for (MealItem meal : todayMeals) {
@@ -143,46 +135,36 @@ public class HomeFragment extends Fragment {
             fats += meal.getTotalFats();
         }
 
-        // ✅ Existing formatting (UNCHANGED)
         totalCalorieToday.setText(formatCalories(totalCal));
         setMacroValue(carbConsumption, carbUnit, carbs);
         setMacroValue(proteinConsumption, proteinUnit, protein);
         setMacroValue(fatConsumption, fatUnit, fats);
 
-        // ✅ Date formatting (UNCHANGED)
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd", Locale.getDefault());
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
         todayDate.setText(dateFormat.format(new Date()));
         if (todayDay != null) todayDay.setText(dayFormat.format(new Date()));
 
-        // 🔥 NEW: Load daily goal from Profile + Insights!
         loadDailyGoalAndInsights(totalCal, carbs, protein, fats);
     }
 
-    /** 🔥 NEW: Loads goal from user profile + generates insights */
     private void loadDailyGoalAndInsights(double todayCal, double carbs, double protein, double fats) {
-        // 1. Load daily goal from SharedPreferences (ResultPreviewFragment saves it)
         loadDailyGoalFromPrefs();
-
-        // 2. Load user profile and generate insights
         UserProfile profile = NutritionCalculator.loadProfile(requireContext());
         NutritionCalculator.NutritionInsight insight = NutritionCalculator.generateInsight(
                 profile, todayCal, protein, carbs, fats);
-
-        // 3. Update insights UI
         if (insightEmoji != null) insightEmoji.setText(insight.emoji);
         if (insightScore != null) insightScore.setText(insight.balanceScore + "/100");
         if (insightStatus != null) insightStatus.setText(insight.status);
         if (insightRecommendation != null) insightRecommendation.setText(insight.recommendation);
     }
 
-    /** ✅ Enhanced - Now pulls from profile if available */
+
     private void loadDailyGoalFromPrefs() {
         if (goalCalorie == null) return;
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE);
 
-        // ✅ Priority 1: Check if profile-based goal exists (from ResultPreview)
         String profileGoalStr = prefs.getString("daily_calorie_goal_profile", null);
         if (profileGoalStr != null && !profileGoalStr.isEmpty()) {
             try {
@@ -192,7 +174,6 @@ public class HomeFragment extends Fragment {
             } catch (NumberFormatException ignored) {}
         }
 
-        // ✅ Priority 2: Fallback to manual goal
         String manualGoalStr = prefs.getString("daily_calorie_goal", null);
         if (manualGoalStr != null && !manualGoalStr.isEmpty()) {
             try {
@@ -202,11 +183,9 @@ public class HomeFragment extends Fragment {
             } catch (NumberFormatException ignored) {}
         }
 
-        // ✅ Default
         goalCalorie.setText("-");
     }
 
-    // ✅ Existing methods (UNCHANGED)
     private void setMacroValue(TextView valueText, TextView unitText, double grams) {
         if (grams < 1000) {
             valueText.setText(String.format(Locale.getDefault(), "%.0f", grams));
@@ -244,12 +223,11 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshData(); // ✅ Refreshes everything
+        refreshData();
     }
 
-    /** ✅ Existing refresh (ENHANCED) */
     public void refreshData() {
-        loadTodayStats();  // Now handles stats + insights + goal
+        loadTodayStats();
         refreshRecentMealsWithOverlay();
     }
 
@@ -264,7 +242,6 @@ public class HomeFragment extends Fragment {
 
         recentMealsAdapter.updateMeals(top5);
 
-        // ✅ Handle overlay
         if (overlay != null) {
             overlay.setVisibility(recentMeals.isEmpty() ? View.VISIBLE : View.GONE);
         }
@@ -273,7 +250,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // ✅ Prevent memory leaks
         if (recentMealsAdapter != null) {
             recentMealsAdapter.setOnMealClickListener(null);
         }

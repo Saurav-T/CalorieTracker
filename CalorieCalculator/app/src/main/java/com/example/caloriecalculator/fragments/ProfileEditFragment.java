@@ -62,7 +62,6 @@ public class ProfileEditFragment extends Fragment {
         activityLevelInput.setAdapter(adapter);
     }
 
-    /** 🔥 Load existing profile data */
     private void loadExistingProfile() {
         UserProfile profile = NutritionCalculator.loadProfile(requireContext());
         
@@ -95,8 +94,6 @@ public class ProfileEditFragment extends Fragment {
             if (validateInputs()) {
                 UserProfile profile = createProfile();
                 NutritionCalculator.saveProfile(requireContext(), profile);
-                
-                // 🔥 Save as daily goal for HomeFragment
                 NutritionCalculator.DailyRecommendation rec = NutritionCalculator.calculate(profile);
                 if (rec != null) {
                     requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE)
@@ -106,11 +103,9 @@ public class ProfileEditFragment extends Fragment {
                 }
                 
                 Toast.makeText(requireContext(), "✅ Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                
-                // Refresh HomeFragment insights
+
                 refreshHomeFragment();
-                
-                // Go back to Settings
+
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
@@ -172,7 +167,6 @@ public class ProfileEditFragment extends Fragment {
         return profile;
     }
 
-    /** 🔥 Refresh HomeFragment insights after profile update */
     private void refreshHomeFragment() {
         if (getActivity() instanceof com.example.caloriecalculator.MainActivity) {
             com.example.caloriecalculator.MainActivity activity = (com.example.caloriecalculator.MainActivity) getActivity();

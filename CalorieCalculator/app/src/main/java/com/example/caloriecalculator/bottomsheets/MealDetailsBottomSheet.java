@@ -32,7 +32,6 @@ public class MealDetailsBottomSheet extends BottomSheetDialogFragment {
     private MealItem meal;
     private MealContentsAdapter contentsAdapter;
 
-    // Views
     private TextView mealName, mealCalorie, mealFats, mealProtein, mealCarbs;
     private TextView fatUnit, proteinUnit, carbUnit;
     private MaterialCardView indicatorLayout;
@@ -109,7 +108,6 @@ public class MealDetailsBottomSheet extends BottomSheetDialogFragment {
             setMacroValue(mealProtein, proteinUnit, meal.getTotalProtein());
             setMacroValue(mealCarbs, carbUnit, meal.getTotalCarbs());
 
-            // 🔥 NEW: Determine meal type based on contents
             updateDietaryIndicator();
         }
     }
@@ -122,17 +120,12 @@ public class MealDetailsBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    /** 🔥 MAIN LOGIC: If ANY item is Non-Vegetarian → Meal is Non-Veg (Red) */
     private void updateDietaryIndicator() {
         if (meal == null || indicatorLayout == null) return;
 
         boolean isNonVeg = false;
 
         for (MealItem.MealFoodSnapshot snapshot : meal.getFoodSnapshots()) {
-            // We need dietaryPref. Since snapshot doesn't store it, we can check from original FoodItem
-            // But for now, since we have FoodItem in snapshot via join, better to add dietaryPref to snapshot later.
-            // Quick check using name/category or store it.
-            // For immediate solution:
             if (snapshot.foodName.toLowerCase().contains("chicken") ||
                     snapshot.foodName.toLowerCase().contains("egg") ||
                     snapshot.foodName.toLowerCase().contains("meat") ||

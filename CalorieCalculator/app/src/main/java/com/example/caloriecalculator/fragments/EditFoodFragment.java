@@ -31,11 +31,9 @@ public class EditFoodFragment extends Fragment {
     private MaterialCardView saveButton;
     private DatabaseHelper dbHelper;
 
-    // Current editing food item
     private FoodItem editingFoodItem;
     private long editingFoodId = -1;
 
-    // Same arrays as AddFoodFragment
     private final String[] dietaryOptions = {"Vegetarian", "Non-Vegetarian"};
     private final String[] categories = {
             "Grains", "Milk and Milk Products", "Fruit and Fruit Products", "Eggs",
@@ -94,7 +92,6 @@ public class EditFoodFragment extends Fragment {
         setupClickListeners();
         setupSmartLogic();
 
-        // Pre-fill with existing data
         if (editingFoodItem != null) {
             populateFields();
         }
@@ -130,7 +127,6 @@ public class EditFoodFragment extends Fragment {
         protein.setText(editingFoodItem.getProtein());
         carbs.setText(editingFoodItem.getCarbs());
 
-        // Update icon and unit display
         updateCategoryIcon(editingFoodItem.getCategory());
         updateUnitDisplay();
     }
@@ -162,7 +158,6 @@ public class EditFoodFragment extends Fragment {
             return;
         }
 
-        // Create updated FoodItem
         FoodItem updatedItem = new FoodItem(
                 foodName.getText().toString().trim(),
                 dietaryPreferences.getText().toString(),
@@ -177,7 +172,6 @@ public class EditFoodFragment extends Fragment {
         updatedItem.setId(editingFoodId);
         updatedItem.setCategoryIcon(getCurrentIconResource());
 
-        // Update in database (you'll need to add updateFoodItem() to DatabaseHelper)
         int rowsUpdated = dbHelper.updateFoodItem(updatedItem);
 
         if (rowsUpdated > 0) {
@@ -188,7 +182,6 @@ public class EditFoodFragment extends Fragment {
         }
     }
 
-    // Same helper methods as AddFoodFragment
     private void autoSetDietaryPreference(String selectedCategory) {
         String dietaryPref;
         if (isNonVegCategory(selectedCategory)) {
@@ -275,7 +268,6 @@ public class EditFoodFragment extends Fragment {
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(attrResId, typedValue, true);
 
-        // ✅ CORRECT: Get COLOR resource ID, not raw color
         if (typedValue.resourceId != 0) {
             return ContextCompat.getColor(requireContext(), typedValue.resourceId);
         }

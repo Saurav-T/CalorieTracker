@@ -22,15 +22,13 @@ public class CalculationItemsAdapter extends RecyclerView.Adapter<CalculationIte
     private List<CalculationItem> calculationItems = new ArrayList<>();
     private OnServingChangedListener servingListener;
 
-    // ✅ SIMPLIFIED INTERFACE (no remove for calculation screen)
     public interface OnServingChangedListener {
         void onServingChanged(CalculationItem item, double newServingSize);
     }
 
-    // ✅ DOUBLE PRECISION
     public static class CalculationItem {
         public FoodItem foodItem;
-        public double servingSize = 1.0;  // ✅ Double
+        public double servingSize = 1.0;
 
         public CalculationItem(FoodItem foodItem) {
             this.foodItem = foodItem;
@@ -87,7 +85,6 @@ public class CalculationItemsAdapter extends RecyclerView.Adapter<CalculationIte
         return new ArrayList<>(calculationItems);
     }
 
-    // ✅ DOUBLE TOTALS
     public double getTotalCalories() {
         double total = 0.0;
         for (CalculationItem item : calculationItems) total += item.getCalories();
@@ -168,10 +165,8 @@ public class CalculationItemsAdapter extends RecyclerView.Adapter<CalculationIte
             }
 
 
-            // ✅ Display serving with 1 decimal
             servingSizeText.setText(String.format("%.1f", item.servingSize));
 
-            // +/- Buttons (0.5 increments)
             subServingCard.setOnClickListener(v -> {
                 if (item.servingSize > 0.5) {
                     item.servingSize -= 0.5;

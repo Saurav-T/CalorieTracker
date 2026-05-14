@@ -35,7 +35,7 @@ public class ProfileSetupFragment extends Fragment {
 
         initViews(view);
         setupActivityDropdown();
-        loadExistingProfile();        // 🔥 Pre-fill if user already has data
+        loadExistingProfile();
         setupSaveButton();
 
         return view;
@@ -81,7 +81,6 @@ public class ProfileSetupFragment extends Fragment {
         });
     }
 
-    /** 🔥 Load existing profile data (makes this fragment reusable for editing) */
     private void loadExistingProfile() {
         UserProfile profile = NutritionCalculator.loadProfile(requireContext());
 
@@ -123,7 +122,6 @@ public class ProfileSetupFragment extends Fragment {
                 UserProfile profile = createProfile();
                 NutritionCalculator.saveProfile(requireContext(), profile);
 
-                // Calculate and save daily goal for HomeFragment
                 NutritionCalculator.DailyRecommendation rec = NutritionCalculator.calculate(profile);
                 if (rec != null) {
                     requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE)
@@ -134,7 +132,6 @@ public class ProfileSetupFragment extends Fragment {
 
                 Toast.makeText(requireContext(), "✅ Profile saved successfully!", Toast.LENGTH_SHORT).show();
 
-                // Go to Result Preview
                 ResultPreviewFragment resultFragment = ResultPreviewFragment.newInstance(profile);
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, resultFragment)

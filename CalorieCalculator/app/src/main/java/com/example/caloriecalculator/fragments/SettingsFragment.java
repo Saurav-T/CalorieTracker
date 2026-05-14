@@ -125,7 +125,6 @@ public class SettingsFragment extends Fragment {
 
     private void checkStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // Android 11+ uses scoped storage
             performExport();
         } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -165,13 +164,12 @@ public class SettingsFragment extends Fragment {
     private void openImportFilePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 
-        // FIXED: Use multiple MIME types for better compatibility
         String[] mimeTypes = {
-                "text/comma-separated-values",  // CSV
-                "text/csv",                     // CSV
-                "text/plain",                   // TXT fallback
-                "application/csv",              // Some apps use this
-                "*/*"                           // Universal fallback
+                "text/comma-separated-values",
+                "text/csv",
+                "text/plain",
+                "application/csv",
+                "*/*"
         };
 
         intent.setType("*/*");
@@ -179,10 +177,8 @@ public class SettingsFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_TITLE, "Select CSV file");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        // Also add a secondary intent for direct Downloads access
         Intent chooserIntent = Intent.createChooser(intent, "Select CSV file to import");
 
-        // Add Downloads folder intent as backup
         Intent downloadsIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         downloadsIntent.putExtra("android.provider.extra.INITIAL_URI",
                 Uri.parse("content://com.android.externalstorage.documents/tree/primary%3ADownload"));
@@ -190,7 +186,6 @@ public class SettingsFragment extends Fragment {
         try {
             importFileLauncher.launch(chooserIntent);
         } catch (Exception e) {
-            // Fallback to document tree
             importFileLauncher.launch(downloadsIntent);
         }
     }
@@ -226,7 +221,6 @@ public class SettingsFragment extends Fragment {
             try {
                 DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
 
-                // Delete all data from database
                 List<MealItem> allMeals = dbHelper.getAllMeals();
                 for (MealItem meal : allMeals) {
                     dbHelper.deleteMeal(meal.getId());
@@ -237,17 +231,14 @@ public class SettingsFragment extends Fragment {
                     dbHelper.deleteFoodItem(food.getId());
                 }
 
-                // 🔥 FULLY CLEAR SHARED PREFERENCES
                 SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE);
                 prefs.edit().clear().apply();   // Completely remove everything
 
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "🗑️ App has been completely reset!", Toast.LENGTH_LONG).show();
 
-                    // Clear the input field and show "-"
                     calorieIntakeInput.setText("");
 
-                    // Refresh HomeFragment so it shows "-" for goal
                     refreshHomeFragment();
                 });
 
@@ -263,9 +254,8 @@ public class SettingsFragment extends Fragment {
 
         if (homeFragment instanceof HomeFragment) {
             HomeFragment home = (HomeFragment) homeFragment;
-            home.refreshData();           // This already exists in your HomeFragment
+            home.refreshData();
         } else {
-            // If HomeFragment is not currently visible, reload it
             HomeFragment newHome = new HomeFragment();
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, newHome)

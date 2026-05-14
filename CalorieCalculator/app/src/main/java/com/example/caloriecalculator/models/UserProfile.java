@@ -10,7 +10,6 @@ public class UserProfile implements Serializable {
     private String activityLevel;
     private String goal;
 
-    // Getters and Setters
     public double getWeightKg() { return weightKg; }
     public void setWeightKg(double weightKg) { this.weightKg = weightKg; }
 

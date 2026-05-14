@@ -27,8 +27,6 @@ public class SearchHelper {
         allFoods.removeIf(item -> item.getId() == id);
         Log.d(TAG, "🗑️ Removed ID: " + id);
     }
-
-    // 🔥 CONTAINS ANYWHERE SEARCH (LIKE '%query%')
     public List<FoodItem> search(String query, String categoryFilter, String dietaryFilter) {
         Log.d(TAG, "🔍 Searching: q='" + query + "', cat='" + categoryFilter + "', diet='" + dietaryFilter + "'");
 

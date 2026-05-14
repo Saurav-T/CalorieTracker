@@ -21,14 +21,13 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
 
     private static final String TAG = "FilterSheet";
 
-    // 🔥 SINGLE MIXED ChipGroup (All filters together)
     private Chip chipAll, chipVegetarian, chipNonVegetarian;
     private Chip chipGrains, chipMilkProducts, chipFruitProducts, chipEggs;
     private Chip chipMeatAndPoultry, chipVegetables, chipSeedsAndNuts;
     private Chip chipSugarAndSugarProducts, chipNABeverages, chipABeverages, chipDiscretionary;
 
     private FilterPrefs prefs;
-    private String currentFilter = "All"; // Single active filter
+    private String currentFilter = "All";
 
     public static FilterBottomSheetFragment newInstance() {
         return new FilterBottomSheetFragment();
@@ -46,7 +45,7 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottomsheet_food_filter, container, false);
         initViews(view);
-        updateChipSelection(); // 🔥 Restore last selection
+        updateChipSelection();
         setupChipListeners();
         return view;
     }
@@ -57,13 +56,10 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(R.attr.bottomSheetBgColor, typedValue, true);
 
-        // CUSTOMIZE: Remove bottom padding + set background
         dialog.setOnShowListener(d -> {
             FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet != null) {
-                // Remove bottom padding
                 bottomSheet.setPadding(0, 0, 0, 0);
-                // Set custom background color
                 bottomSheet.setBackgroundColor(typedValue.data);
             }
         });
@@ -88,7 +84,6 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
         chipDiscretionary = view.findViewById(R.id.chipDiscretionary);
     }
 
-    // 🔥 VISUAL SELECTION (Single chip checked)
     private void updateChipSelection() {
         clearAllChips();
 
@@ -128,7 +123,7 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private void setupChipListeners() {
-        // 🔥 SINGLE MIXED SELECTION - All chips toggle same filter
+
         chipAll.setOnClickListener(v -> selectFilter("All"));
         chipVegetarian.setOnClickListener(v -> selectFilter("Vegetarian"));
         chipNonVegetarian.setOnClickListener(v -> selectFilter("Non-Vegetarian"));
@@ -145,7 +140,6 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
         chipDiscretionary.setOnClickListener(v -> selectFilter("Discretionary"));
     }
 
-    // 🔥 SINGLE FILTER SELECTION
     private void selectFilter(String filterValue) {
         currentFilter = filterValue;
         updateChipSelection();
@@ -154,7 +148,7 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private void saveToPrefs() {
-        // 🔥 PERSISTENT STORAGE
+
         if ("Vegetarian".equals(currentFilter) || "Non-Vegetarian".equals(currentFilter)) {
             prefs.saveDietary(currentFilter);
             prefs.saveCategory("All");

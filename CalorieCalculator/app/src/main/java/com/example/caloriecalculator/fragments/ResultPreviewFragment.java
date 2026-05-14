@@ -42,7 +42,7 @@ public class ResultPreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result_preview, container, false);
 
         initViews(view);
-        calculateAndDisplayResults();   // Fixed: Call after profile is loaded
+        calculateAndDisplayResults();
 
         view.findViewById(R.id.continuebutton).setOnClickListener(v -> completeOnboarding());
 
@@ -71,7 +71,6 @@ public class ResultPreviewFragment extends Fragment {
             return;
         }
 
-        // Display results safely
         if (bmiText != null) {
             bmiText.setText(String.format("%.1f (%s)", rec.bmi, rec.bmiCategory));
         }
@@ -97,7 +96,6 @@ public class ResultPreviewFragment extends Fragment {
             return;
         }
 
-        // Save the calculated daily goal for HomeFragment
         requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE)
                 .edit()
                 .putBoolean("has_completed_onboarding", true)

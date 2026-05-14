@@ -22,9 +22,7 @@ import java.util.List;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     
     private List<FoodItem> foodList = new ArrayList<>();
-    private OnItemClickListener listener;  // NEW: Callback interface
-
-    // NEW: Interface for click handling
+    private OnItemClickListener listener;
     public interface OnItemClickListener {
         void onItemClick(FoodItem foodItem);
     }

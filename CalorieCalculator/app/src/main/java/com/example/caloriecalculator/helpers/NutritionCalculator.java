@@ -19,8 +19,8 @@ public class NutritionCalculator {
     }
 
     public static class NutritionInsight {
-        public int balanceScore;        // 0-100
-        public String status;           // Excellent, Good, Fair, Needs Attention
+        public int balanceScore;
+        public String status;
         public String emoji;
         public String mainIssue;
         public String recommendation;
@@ -95,7 +95,6 @@ public class NutritionCalculator {
         }
     }
 
-    // SharedPreferences Helper
     public static void saveProfile(Context context, UserProfile profile) {
         SharedPreferences prefs = context.getSharedPreferences("user_profile", Context.MODE_PRIVATE);
         prefs.edit()
@@ -139,7 +138,6 @@ public class NutritionCalculator {
             return insight;
         }
 
-        // Calculate individual scores
         double calScore = rec.dailyCalories > 0 ?
                 Math.min((todayCalories / rec.dailyCalories) * 100, 100) : 50;
 
@@ -152,7 +150,6 @@ public class NutritionCalculator {
         double fatScore = rec.fatG > 0 ?
                 Math.min((todayFats / rec.fatG) * 100, 100) : 50;
 
-        // Overall Balance Score (weighted)
         insight.balanceScore = (int) (
                 calScore * 0.35 +
                         protScore * 0.25 +
@@ -160,7 +157,6 @@ public class NutritionCalculator {
                         fatScore * 0.20
         );
 
-        // Determine Status & Recommendation
         if (insight.balanceScore >= 85) {
             insight.status = "Excellent";
             insight.emoji = "🏆";
