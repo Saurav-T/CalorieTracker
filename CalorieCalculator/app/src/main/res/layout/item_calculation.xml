@@ -148,6 +148,7 @@
                 android:layout_height="match_parent"
                 android:text="+"
                 android:gravity="center"
+                android:textColor="@color/black"
                 app:tint="@color/black"
                 android:id="@+id/add_icon"
                 />

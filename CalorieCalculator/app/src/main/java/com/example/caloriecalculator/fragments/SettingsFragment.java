@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.caloriecalculator.R;
 import com.example.caloriecalculator.database.DatabaseHelper;
+import com.example.caloriecalculator.helpers.NutritionCalculator;
 import com.example.caloriecalculator.models.FoodItem;
 import com.example.caloriecalculator.models.MealItem;
 import com.google.android.material.card.MaterialCardView;
@@ -232,17 +233,25 @@ public class SettingsFragment extends Fragment {
                 }
 
                 SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", requireActivity().MODE_PRIVATE);
-                prefs.edit().clear().apply();   // Completely remove everything
+                prefs.edit().clear().apply();
+
+                NutritionCalculator.clearProfile(requireContext());
+
+                SharedPreferences profilePrefs = requireContext().getSharedPreferences("user_profile", requireContext().MODE_PRIVATE);
+                profilePrefs.edit().clear().apply();
 
                 requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "🗑️ App has been completely reset!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "🗑️ App has been completely reset!\nProfile, foods, meals & settings cleared.", Toast.LENGTH_LONG).show();
 
-                    calorieIntakeInput.setText("");
+                    if (calorieIntakeInput != null) {
+                        calorieIntakeInput.setText("");
+                    }
 
                     refreshHomeFragment();
                 });
 
             } catch (Exception e) {
+                e.printStackTrace();
                 requireActivity().runOnUiThread(() ->
                         Toast.makeText(getContext(), "❌ Reset failed", Toast.LENGTH_SHORT).show());
             }

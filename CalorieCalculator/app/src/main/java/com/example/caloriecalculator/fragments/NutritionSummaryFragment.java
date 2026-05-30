@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +19,7 @@ public class NutritionSummaryFragment extends Fragment {
 
     private UserProfile profile;
     private NutritionCalculator.DailyRecommendation rec;
-
+    private ImageView backButton;
     private TextView bmiText, healthyRangeText, caloriesText;
     private TextView proteinText, carbsText, fatsText;
 
@@ -37,6 +38,7 @@ public class NutritionSummaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result_preview, container, false);
 
         initViews(view);
+        setupBackButton();
         setupTitle(view);
         calculateAndDisplayResults();
         MaterialCardView continueButton = view.findViewById(R.id.continuebutton);
@@ -52,6 +54,7 @@ public class NutritionSummaryFragment extends Fragment {
         proteinText = view.findViewById(R.id.protein);
         carbsText = view.findViewById(R.id.carbs);
         fatsText = view.findViewById(R.id.fats);
+        backButton = view.findViewById(R.id.back_button);
     }
 
     private void setupTitle(View view) {
@@ -108,5 +111,13 @@ public class NutritionSummaryFragment extends Fragment {
                 .replace(R.id.fragment_container, profileFragment)
                 .addToBackStack("profile_edit")
                 .commit();
+    }
+
+    private void setupBackButton() {
+        backButton.setOnClickListener(v -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .popBackStack();
+        });
     }
 }

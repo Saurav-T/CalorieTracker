@@ -34,13 +34,12 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // Views - ✅ UPDATED with new insight views
     private View fragmentView;
     private TextView totalCalorieToday, carbConsumption, proteinConsumption, fatConsumption;
     private TextView todayDate, todayDay, goalCalorie, carbUnit, proteinUnit, fatUnit;
     private TextView insightEmoji, insightScore, insightStatus, insightRecommendation; // ✅ NEW
     private RecyclerView recentMealsRecycler;
-    private LinearLayout overlay; // ✅ For empty state
+    private LinearLayout overlay;
 
     // Data
     private DatabaseHelper dbHelper;

@@ -121,6 +121,11 @@ public class NutritionCalculator {
         return profile;
     }
 
+    public static void clearProfile(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+        prefs.edit().clear().apply();
+    }
+
     public static NutritionInsight generateInsight(UserProfile profile,
                                                    double todayCalories,
                                                    double todayProtein,

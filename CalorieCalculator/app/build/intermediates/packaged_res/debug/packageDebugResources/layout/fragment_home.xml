@@ -364,7 +364,7 @@
                             android:id="@+id/insight_score"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="78/100"
+                            android:text="0/100"
                             android:textColor="?attr/secondaryCardTextColor"
                             android:textSize="24sp"
                             android:textStyle="bold"/>
@@ -385,7 +385,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:textColor="?attr/secondaryCardTextColor"
-                    android:text="Add more protein-rich foods like eggs or chicken."
+                    android:text="-"
                     android:textSize="15sp"
                     android:lineSpacingExtra="4dp"/>
             </LinearLayout>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class ProfileSetupFragment extends Fragment {
 
+    private ImageView backButton;
     private TextInputEditText ageInput, weightInput, heightInput;
     private MaterialRadioButton radioMale, radioFemale;
     private MaterialAutoCompleteTextView activityLevelInput;
@@ -34,6 +36,7 @@ public class ProfileSetupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_setup, container, false);
 
         initViews(view);
+        setupBackButton();
         setupActivityDropdown();
         loadExistingProfile();
         setupSaveButton();
@@ -52,6 +55,7 @@ public class ProfileSetupFragment extends Fragment {
         radioMaintain = view.findViewById(R.id.radioMaintain);
         radioGain = view.findViewById(R.id.radioGain);
         saveButton = view.findViewById(R.id.save);
+        backButton = view.findViewById(R.id.back_button);
     }
 
     private void setupActivityDropdown() {
@@ -195,5 +199,13 @@ public class ProfileSetupFragment extends Fragment {
         else profile.setGoal("maintenance");
 
         return profile;
+    }
+
+    private void setupBackButton() {
+        backButton.setOnClickListener(v -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .popBackStack();
+        });
     }
 }
