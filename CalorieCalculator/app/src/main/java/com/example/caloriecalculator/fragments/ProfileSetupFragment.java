@@ -174,8 +174,8 @@ public class ProfileSetupFragment extends Fragment {
                 Toast.makeText(getContext(), "Weight should be between 30-200 kg", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (height < 140 || height > 220) {
-                Toast.makeText(getContext(), "Height should be between 140-220 cm", Toast.LENGTH_SHORT).show();
+            if (height < 90 || height > 220) {
+                Toast.makeText(getContext(), "Height should be between 90-220 cm", Toast.LENGTH_SHORT).show();
                 return false;
             }
         } catch (NumberFormatException e) {
