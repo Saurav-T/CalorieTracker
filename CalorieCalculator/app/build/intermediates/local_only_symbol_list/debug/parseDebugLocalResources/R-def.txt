@@ -149,7 +149,6 @@ id fragment_container
 id full_meal_item
 id get_started
 id goal_calorie
-id habit_icon
 id hb_guideline
 id healthyRange
 id height

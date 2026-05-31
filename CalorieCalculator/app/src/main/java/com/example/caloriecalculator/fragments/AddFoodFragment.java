@@ -23,7 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 public class AddFoodFragment extends Fragment {
 
     // UI Views
-    private ImageView selectedIcon, back;  // NEW: Icon ImageView
+    private ImageView selectedIcon, back;
     private TextView unitTextView;
     private MaterialAutoCompleteTextView dietaryPreferences, category, measure;
     private TextInputEditText foodName, perServingSize, calories, fats, protein, carbs;
@@ -36,7 +36,6 @@ public class AddFoodFragment extends Fragment {
                     R.drawable.ic_drink, R.drawable.ic_alcohol, R.drawable.ic_snack}
     };
 
-    // Category names must match exactly with your categories array order!
     private final String[] CATEGORY_ICON_NAMES = {
             "Grains", "Milk and Milk Products", "Fruit and Fruit Products", "Eggs",
             "Meat and Poultry", "Vegetables", "Seeds And Nuts", "Sugar And Sugar Products",
@@ -60,7 +59,6 @@ public class AddFoodFragment extends Fragment {
     };
     private String[] units = {"g", "ml", "piece", "cup", "tbsp", "tsp"};
 
-    // Smart dietary mapping
     private final String[] NON_VEG_CATEGORIES = {
             "Eggs",
             "Meat and Poultry"
@@ -114,18 +112,16 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void setupSmartDietaryLogic() {
-        // Listen for category selection and auto-set dietary preference
+
         category.setOnItemClickListener((parent, view, position, id) -> {
             String selectedCategory = categories[position];
             autoSetDietaryPreference(selectedCategory);
         });
     }
 
-    /** NEW: Smart dietary auto-selection logic */
     private void autoSetDietaryPreference(String selectedCategory) {
         String dietaryPref;
 
-        // 1. NON-VEG categories - Force "Non-Vegetarian"
         if (isNonVegCategory(selectedCategory)) {
             dietaryPref = "Non-Vegetarian";
             dietaryPreferences.setText(dietaryPref);
@@ -134,7 +130,7 @@ public class AddFoodFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
 
         }
-        // 2. VEG categories - Set "Vegetarian" (user can change)
+
         else if (isVegCategory(selectedCategory)) {
             dietaryPref = "Vegetarian";
             dietaryPreferences.setText(dietaryPref);
@@ -142,7 +138,6 @@ public class AddFoodFragment extends Fragment {
                     selectedCategory + " → Set to Vegetarian",
                     Toast.LENGTH_SHORT).show();
         }
-        // 3. USER DECIDE categories - Clear and let user choose
         else {
             dietaryPreferences.setText("");
             Toast.makeText(getContext(),
@@ -151,7 +146,6 @@ public class AddFoodFragment extends Fragment {
         }
     }
 
-    // Check if category is strictly NON-VEG
     private boolean isNonVegCategory(String category) {
         for (String nonVeg : NON_VEG_CATEGORIES) {
             if (nonVeg.equals(category)) {
@@ -161,40 +155,34 @@ public class AddFoodFragment extends Fragment {
         return false;
     }
 
-    // Check if category is VEGETARIAN
     private boolean isVegCategory(String category) {
         for (String userDecide : USER_DECIDE_CATEGORIES) {
             if (userDecide.equals(category)) {
                 return false;
             }
         }
-        return true; // All others are vegetarian
+        return true;
     }
 
     private void setupSmartIconLogic() {
         category.setOnItemClickListener((parent, view, position, id) -> {
             String selectedCategory = categories[position];
 
-            // 1. Update dietary preference
             autoSetDietaryPreference(selectedCategory);
 
-            // 2. Update ICON based on category
             updateCategoryIcon(selectedCategory);
 
-            // 3. Update unit display
             updateUnitDisplay();
         });
 
-        // Also update when unit changes
         measure.setOnItemClickListener((parent, view, position, id) -> {
             updateUnitDisplay();
         });
     }
 
     private void updateCategoryIcon(String selectedCategory) {
-        int iconResId = R.drawable.ic_grocery; // Default fallback
+        int iconResId = R.drawable.ic_grocery;
 
-        // Find matching icon for category
         for (int i = 0; i < CATEGORY_ICON_NAMES.length; i++) {
             if (CATEGORY_ICON_NAMES[i].equals(selectedCategory)) {
                 iconResId = CATEGORY_ICONS[0][i];
@@ -202,7 +190,6 @@ public class AddFoodFragment extends Fragment {
             }
         }
 
-        // Animate icon change
         selectedIcon.setImageResource(iconResId);
         selectedIcon.animate()
                 .scaleX(0.8f)
@@ -222,7 +209,7 @@ public class AddFoodFragment extends Fragment {
         if (!selectedUnit.isEmpty()) {
             unitTextView.setText(selectedUnit);
         } else {
-            unitTextView.setText("g"); // Default
+            unitTextView.setText("g");
         }
     }
 
@@ -236,24 +223,20 @@ public class AddFoodFragment extends Fragment {
         );
 
         autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(0);  // Instant show
+        autoCompleteTextView.setThreshold(0);
 
-        // ✅ VISIBLE BACKGROUND!
         autoCompleteTextView.setDropDownBackgroundResource(R.drawable.dropdown_background);
         autoCompleteTextView.setTextColor(getAttrColor(R.attr.dropdownTextColor));
 
-        // 🔥 SINGLE TAP TRIGGER!
         autoCompleteTextView.setOnClickListener(v -> {
             autoCompleteTextView.showDropDown();  // Show immediately
         });
 
-        // 🔥 KEYBOARD TAP → INSTANT SHOW
         autoCompleteTextView.setOnTouchListener((v, event) -> {
             autoCompleteTextView.showDropDown();
             return false;
         });
 
-        // 🔥 FOCUS → AUTO SHOW
         autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 autoCompleteTextView.post(() -> autoCompleteTextView.showDropDown());
@@ -270,7 +253,6 @@ public class AddFoodFragment extends Fragment {
             return;
         }
 
-        String selectedCategory = category.getText().toString();
         int currentIcon = getCurrentIconResource();
 
         FoodItem foodItem = new FoodItem(
@@ -287,7 +269,6 @@ public class AddFoodFragment extends Fragment {
 
         foodItem.setCategoryIcon(currentIcon);
 
-        // Save to database
         long newId = dbHelper.insertFoodItem(foodItem);
 
         if (newId != -1) {
@@ -301,15 +282,6 @@ public class AddFoodFragment extends Fragment {
         goBackToFoodFragment();
     }
 
-    private boolean isUserDecideCategory(String category) {
-        for (String userDecide : USER_DECIDE_CATEGORIES) {
-            if (userDecide.equals(category)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private int getCurrentIconResource() {
         String selectedCategory = category.getText().toString();
         for (int i = 0; i < CATEGORY_ICON_NAMES.length; i++) {
@@ -317,7 +289,7 @@ public class AddFoodFragment extends Fragment {
                 return CATEGORY_ICONS[0][i];
             }
         }
-        return R.drawable.ic_grocery; // Default
+        return R.drawable.ic_grocery;
     }
 
     private void goBackToFoodFragment() {
@@ -329,7 +301,6 @@ public class AddFoodFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // 🔥 SHOW BOTTOM NAVIGATION WHEN LEAVING THIS SCREEN
         showBottomNavigation();
     }
 
@@ -337,7 +308,6 @@ public class AddFoodFragment extends Fragment {
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(attrResId, typedValue, true);
 
-        // ✅ CORRECT: Get COLOR resource ID, not raw color
         if (typedValue.resourceId != 0) {
             return ContextCompat.getColor(requireContext(), typedValue.resourceId);
         }

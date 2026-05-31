@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 
 import com.example.caloriecalculator.models.FoodItem;
@@ -15,8 +14,6 @@ import com.example.caloriecalculator.models.MealItem;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "CalorieCalculator.db";
 
     public static final String CSV_EXPORT_FILENAME = "food_items_export.csv";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 1;
 
     // Food table
     public static final String TABLE_FOOD = "food_items";
@@ -49,7 +46,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_FATS = "fats";
     public static final String COLUMN_PROTEIN = "protein";
     public static final String COLUMN_CARBS = "carbs";
-    public static final String COLUMN_CATEGORY_ICON = "category_icon";
 
     // Meal Columns
     public static final String MEAL_ID = "_id";
@@ -81,9 +77,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_CALORIES + " TEXT, " +
             COLUMN_FATS + " TEXT, " +
             COLUMN_PROTEIN + " TEXT, " +
-            COLUMN_CARBS + " TEXT," +
-            COLUMN_CATEGORY_ICON + " INTEGER" +
-            ")" ;
+            COLUMN_CARBS + " TEXT" +
+            ")";
 
     private static final String CREATE_MEALS_TABLE =
             "CREATE TABLE " + TABLE_MEALS + " (" +
@@ -144,7 +139,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_FATS, foodItem.getFats());
         values.put(COLUMN_PROTEIN, foodItem.getProtein());
         values.put(COLUMN_CARBS, foodItem.getCarbs());
-        values.put(COLUMN_CATEGORY_ICON, foodItem.getCategoryIcon());
 
         long id = db.insert(TABLE_FOOD, null, values);
         return id;
@@ -169,7 +163,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 foodItem.setFats(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FATS)));
                 foodItem.setProtein(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PROTEIN)));
                 foodItem.setCarbs(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CARBS)));
-                foodItem.setCategoryIcon(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ICON)));
                 foodList.add(foodItem);
             } while (cursor.moveToNext());
         }
@@ -189,42 +182,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_FATS, foodItem.getFats());
         values.put(COLUMN_PROTEIN, foodItem.getProtein());
         values.put(COLUMN_CARBS, foodItem.getCarbs());
-        values.put(COLUMN_CATEGORY_ICON, foodItem.getCategoryIcon());
 
         int rowsUpdated = db.update(TABLE_FOOD, values, COLUMN_ID + "=?",
                 new String[]{String.valueOf(foodItem.getId())});
         return rowsUpdated;
-    }
-
-    public List<FoodItem> searchFoodItems(String query) {
-        List<FoodItem> foodList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String searchQuery = "%" + query + "%";
-        Cursor cursor = db.rawQuery(
-                "SELECT * FROM " + TABLE_FOOD + " WHERE " + COLUMN_NAME + " LIKE ? OR " +
-                        COLUMN_CATEGORY + " LIKE ?",
-                new String[]{searchQuery, searchQuery}
-        );
-
-        if (cursor.moveToFirst()) {
-            do {
-                FoodItem foodItem = new FoodItem();
-                foodItem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID)));
-                foodItem.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
-                foodItem.setDietaryPref(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIETARY_PREF)));
-                foodItem.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)));
-                foodItem.setUnit(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UNIT)));
-                foodItem.setServingSize(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SERVING_SIZE)));
-                foodItem.setCalories(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CALORIES)));
-                foodItem.setFats(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FATS)));
-                foodItem.setProtein(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PROTEIN)));
-                foodItem.setCarbs(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CARBS)));
-                foodItem.setCategoryIcon(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ICON)));  // ← ADD THIS
-                foodList.add(foodItem);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return foodList;
     }
 
     public boolean deleteFoodItem(long id) {
@@ -287,7 +248,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<MealItem> getAllMeals() {
         List<MealItem> meals = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        // ✅ Sort by timestamp DESC (newest first)
         Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + TABLE_MEALS + " ORDER BY " + MEAL_TIMESTAMP + " DESC",
                 null
@@ -298,7 +258,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 MealItem meal = new MealItem();
                 meal.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MEAL_ID)));
                 meal.setMealName(cursor.getString(cursor.getColumnIndexOrThrow(MEAL_NAME)));
-                meal.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow(MEAL_TIMESTAMP)));  // ✅ Long
+                meal.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow(MEAL_TIMESTAMP)));
                 meal.setTotalCalories(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_CALORIES)));
                 meal.setTotalFats(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_FATS)));
                 meal.setTotalProtein(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_PROTEIN)));
@@ -309,6 +269,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return meals;
     }
+
     public List<MealItem> getTodayMeals() {
         long todayStart = getTodayStartTimestamp();
         String[] args = {String.valueOf(todayStart)};
@@ -323,7 +284,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 MealItem meal = new MealItem();
                 meal.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MEAL_ID)));
                 meal.setMealName(cursor.getString(cursor.getColumnIndexOrThrow(MEAL_NAME)));
-                meal.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow(MEAL_TIMESTAMP)));  // ✅ Long
+                meal.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow(MEAL_TIMESTAMP)));
                 meal.setTotalCalories(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_CALORIES)));
                 meal.setTotalFats(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_FATS)));
                 meal.setTotalProtein(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_PROTEIN)));
@@ -361,43 +322,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             meal.setTotalFats(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_FATS)));
             meal.setTotalProtein(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_PROTEIN)));
             meal.setTotalCarbs(cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_TOTAL_CARBS)));
-
-            // ✅ Use snapshots instead of foodItems
             meal.setFoodSnapshots(getMealFoodSnapshots(mealId));
         }
         cursor.close();
         return meal;
     }
 
-    private List<MealItem.MealFoodItem> getMealFoodItems(long mealId) {
-        List<MealItem.MealFoodItem> foodItems = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
-                "SELECT mf.*, f.* FROM " + TABLE_MEAL_FOODS + " mf " +
-                        "JOIN " + TABLE_FOOD + " f ON mf." + MEAL_FOOD_FOOD_ID + " = f." + COLUMN_ID +
-                        " WHERE mf." + MEAL_FOOD_MEAL_ID + " = ?",
-                new String[]{String.valueOf(mealId)}
-        );
-
-        if (cursor.moveToFirst()) {
-            do {
-                // Create FoodItem
-                FoodItem foodItem = new FoodItem();
-                foodItem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID)));
-                foodItem.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
-                foodItem.setCalories(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CALORIES)));
-                // Add other fields as needed...
-
-                MealItem.MealFoodItem mealFoodItem = new MealItem.MealFoodItem(foodItem,
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(MEAL_FOOD_SERVING_SIZE)));
-                foodItems.add(mealFoodItem);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return foodItems;
-    }
-
-    // Add this METHOD to DatabaseHelper.java (after getMealFoodItems method)
     private List<MealItem.MealFoodSnapshot> getMealFoodSnapshots(long mealId) {
         List<MealItem.MealFoodSnapshot> snapshots = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -431,9 +361,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
-            // Delete meal foods first
             db.delete(TABLE_MEAL_FOODS, MEAL_FOOD_MEAL_ID + "=?", new String[]{String.valueOf(mealId)});
-            // Delete meal
             int rowsDeleted = db.delete(TABLE_MEALS, MEAL_ID + "=?", new String[]{String.valueOf(mealId)});
             db.setTransactionSuccessful();
             return rowsDeleted > 0;
@@ -441,8 +369,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
-
-    //CSV Methods
 
     public boolean exportFoodItemsToCsv(Context context, Uri outputUri) {
         try {
@@ -461,11 +387,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
 
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"))) {
-                // Write header
-                writer.write("id,name,dietary_pref,category,unit,serving_size,calories,fats,protein,carbs,category_icon\n");
+                writer.write("id,name,dietary_pref,category,unit,serving_size,calories,fats,protein,carbs\n");
                 writer.flush();
-
-                // Write data
                 int count = 0;
                 for (FoodItem food : foodItems) {
                     writer.write(Long.toString(food.getId()));
@@ -487,8 +410,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     writer.write(escapeCsvField(food.getProtein() != null ? food.getProtein() : ""));
                     writer.write(",");
                     writer.write(escapeCsvField(food.getCarbs() != null ? food.getCarbs() : ""));
-                    writer.write(",");
-                    writer.write(Integer.toString(food.getCategoryIcon()));
                     writer.write("\n");
                     count++;
                 }
@@ -520,10 +441,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int skippedCount = 0;
             boolean isFirstLine = true;
 
-            // FIXED: Get writable DB once and keep it open
             db = this.getWritableDatabase();
 
-            // FIXED: Wait for any locks to clear
             waitForDatabaseUnlock(db);
 
             db.beginTransaction();
@@ -536,14 +455,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
 
                 String[] columns = parseCsvLine(line);
-                if (columns.length < 11) {
+                if (columns.length < 10) {
                     skippedCount++;
                     continue;
                 }
 
                 FoodItem foodItem = parseCsvRow(columns);
                 if (foodItem != null && isValidFoodItem(foodItem)) {
-                    // FIXED: Check existence WITHOUT opening new DB connection
                     if (!foodItemExistsInTransaction(db, foodItem.getName(), foodItem.getCategory())) {
                         long id = insertFoodItemInTransaction(db, foodItem);
                         if (id > 0) {
@@ -567,7 +485,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.e("DatabaseHelper", "Import failed", e);
             return -1;
         } finally {
-            // FIXED: Proper cleanup
             if (db != null && db.inTransaction()) {
                 try {
                     db.endTransaction();
@@ -588,10 +505,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void waitForDatabaseUnlock(SQLiteDatabase db) {
-        int maxWait = 10; // 5 seconds max
+        int maxWait = 10;
         while (maxWait-- > 0) {
             try {
-                db.execSQL("PRAGMA busy_timeout = 500"); // 500ms timeout
+                db.execSQL("PRAGMA busy_timeout = 500");
                 return;
             } catch (Exception e) {
                 try {
@@ -604,7 +521,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-
     private String[] parseCsvLine(String line) {
         List<String> columns = new ArrayList<>();
         StringBuilder field = new StringBuilder();
@@ -616,7 +532,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (c == '"') {
                 inQuotes = !inQuotes;
             } else if (c == ',' && !inQuotes) {
-                // End of field
                 columns.add(field.toString().trim());
                 field = new StringBuilder();
             } else {
@@ -624,11 +539,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
 
-        // Add last field
         columns.add(field.toString().trim());
 
-        // Ensure we have at least 11 columns (pad with empty if needed)
-        while (columns.size() < 11) {
+        while (columns.size() < 10) {
             columns.add("");
         }
 
@@ -638,10 +551,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return columns.toArray(new String[0]);
     }
 
-
     private FoodItem parseCsvRow(String[] columns) {
         try {
-            if (columns.length < 11) {
+            if (columns.length < 10) {
                 Log.w("CSVParser", "Too few columns: " + columns.length);
                 return null;
             }
@@ -658,12 +570,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             foodItem.setProtein(cleanCsvField(columns[8]));
             foodItem.setCarbs(cleanCsvField(columns[9]));
 
-            try {
-                foodItem.setCategoryIcon(Integer.parseInt(cleanCsvField(columns[10])));
-            } catch (NumberFormatException e) {
-                foodItem.setCategoryIcon(0);
-            }
-
             Log.d("CSVParser", "Parsed food: " + foodItem.getName() + " | " + foodItem.getCategory());
             return foodItem;
 
@@ -676,12 +582,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String cleanCsvField(String field) {
         if (field == null) return "";
 
-        // Remove surrounding quotes
         if (field.startsWith("\"") && field.endsWith("\"")) {
             field = field.substring(1, field.length() - 1);
         }
 
-        // Unescape double quotes
         field = field.replace("\"\"", "\"");
 
         return field.trim();
@@ -718,7 +622,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_FATS, foodItem.getFats());
         values.put(COLUMN_PROTEIN, foodItem.getProtein());
         values.put(COLUMN_CARBS, foodItem.getCarbs());
-        values.put(COLUMN_CATEGORY_ICON, foodItem.getCategoryIcon());
 
         try {
             return db.insert(TABLE_FOOD, null, values);
@@ -727,30 +630,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return -1;
         }
     }
+
     private void closeQuietly(Closeable closeable) {
         if (closeable != null) {
             try {
                 closeable.close();
             } catch (IOException e) {
-                // Ignore
             }
         }
     }
 
-
     private boolean isValidFoodItem(FoodItem foodItem) {
-        // Log all validation steps
         Log.d("Validator", "Validating: " + foodItem.getName() + " | Cat: '" +
                 foodItem.getCategory() + "' | Dietary: '" + foodItem.getDietaryPref() + "'");
 
-        // 1. Required: Name
         String name = foodItem.getName();
         if (name == null || name.trim().isEmpty()) {
             Log.w("Validator", "❌ EMPTY NAME");
             return false;
         }
 
-        // 2. Required: Category - case-insensitive exact match
         String category = foodItem.getCategory();
         if (category == null || category.trim().isEmpty()) {
             Log.w("Validator", "❌ EMPTY CATEGORY");
@@ -777,7 +676,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         Log.d("Validator", "✅ Category OK: '" + category + "' → '" + matchedCategory + "'");
 
-        // 3. Dietary (optional)
         String dietary = foodItem.getDietaryPref();
         if (dietary != null && !dietary.trim().isEmpty()) {
             dietary = dietary.trim();
@@ -789,7 +687,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         Log.d("Validator", "✅ Dietary OK: '" + dietary + "'");
 
-        // 4. Numeric fields (allow empty)
         String[] numericFields = {
                 foodItem.getCalories(),
                 foodItem.getFats(),
@@ -815,6 +712,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("Validator", "🎉 FULLY VALID: " + foodItem.getName());
         return true;
     }
+
     public String[] getDietaryOptions() {
         return new String[]{"Vegetarian", "Non-Vegetarian"};
     }
@@ -842,13 +740,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return "\"" + escaped + "\"";
         }
         return escaped;
-    }
-
-    private String unescapeCsvField(String field) {
-        if (field == null) return "";
-        if (field.startsWith("\"") && field.endsWith("\"")) {
-            field = field.substring(1, field.length() - 1);
-        }
-        return field.replace("\"\"", "\"");
     }
 }

@@ -4011,7 +4011,6 @@ int id graph_wrap 0x7f09011a
 int id group_divider 0x7f09011b
 int id grouping 0x7f09011c
 int id groups 0x7f09011d
-int id habit_icon 0x7f09011e
 int id hb_guideline 0x7f09011f
 int id header_title 0x7f090120
 int id healthyRange 0x7f090121

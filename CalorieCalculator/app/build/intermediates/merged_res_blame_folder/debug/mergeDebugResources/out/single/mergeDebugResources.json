@@ -152,6 +152,10 @@
         "source": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-main-36:/drawable/ic_circle_filled.xml"
     },
     {
+        "merged": "com.example.caloriecalculator.app-debug-34:/layout_item_selection.xml.flat",
+        "source": "com.example.caloriecalculator.app-main-36:/layout/item_selection.xml"
+    },
+    {
         "merged": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-debug-34:/drawable_ic_csv.xml.flat",
         "source": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-main-36:/drawable/ic_csv.xml"
     },
@@ -300,6 +304,10 @@
         "source": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-main-36:/drawable/ic_delete.xml"
     },
     {
+        "merged": "com.example.caloriecalculator.app-debug-34:/layout_item_selected.xml.flat",
+        "source": "com.example.caloriecalculator.app-main-36:/layout/item_selected.xml"
+    },
+    {
         "merged": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-debug-34:/drawable_dropdown_background.xml.flat",
         "source": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-main-36:/drawable/dropdown_background.xml"
     },
@@ -310,10 +318,6 @@
     {
         "merged": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-debug-34:/drawable_ic_sugar.xml.flat",
         "source": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-main-36:/drawable/ic_sugar.xml"
-    },
-    {
-        "merged": "com.example.caloriecalculator.app-debug-34:/layout_fragment_home.xml.flat",
-        "source": "com.example.caloriecalculator.app-main-36:/layout/fragment_home.xml"
     },
     {
         "merged": "/Users/suravtamrakar/.gradle/daemon/8.13/com.example.caloriecalculator.app-debug-34:/mipmap-xhdpi_ic_launcher_round.webp.flat",

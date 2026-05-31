@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_grocery"
                 app:tint="@color/dark_grey"
-                android:id="@+id/habit_icon"
+                android:id="@+id/food_icon"
                 android:padding="10dp"/>
         </com.google.android.material.card.MaterialCardView>
         <LinearLayout

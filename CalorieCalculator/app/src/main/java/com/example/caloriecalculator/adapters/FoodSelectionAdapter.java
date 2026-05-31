@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caloriecalculator.R;
+import com.example.caloriecalculator.helpers.AppConstants;
 import com.example.caloriecalculator.models.FoodItem;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
@@ -27,9 +27,6 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
     private Set<Long> selectedItems = new HashSet<>();
     private OnItemSelectionChangedListener listener;
     private OnItemClickListener itemClickListener;
-
-    private String currentDietaryFilter = "All";
-    private String currentCategoryFilter = "All";
 
     public interface OnItemSelectionChangedListener {
         void onSelectionChanged(int selectedCount);
@@ -50,11 +47,6 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
         notifyDataSetChanged();
     }
 
-    public void clearSelection() {
-        selectedItems.clear();
-        notifyDataSetChanged();
-    }
-
     public List<FoodItem> getSelectedItems() {
         List<FoodItem> selected = new ArrayList<>();
         for (FoodItem item : foodList) {
@@ -71,16 +63,6 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
-    }
-
-    public void setFilters(String dietaryFilter, String categoryFilter) {
-        this.currentDietaryFilter = dietaryFilter;
-        this.currentCategoryFilter = categoryFilter;
-    }
-
-    public void clearFilters() {
-        this.currentDietaryFilter = "All";
-        this.currentCategoryFilter = "All";
     }
 
     @NonNull
@@ -103,13 +85,13 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
     }
 
     class FoodViewHolder extends RecyclerView.ViewHolder {
-        ImageView habitIcon;
+        ImageView foodIcon;
         TextView foodName, perServing, perServingMeasure, caloriesPerServing;
         MaterialCheckBox selectionCheckbox;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
-            habitIcon = itemView.findViewById(R.id.habit_icon);
+            foodIcon = itemView.findViewById(R.id.food_icon);
             foodName = itemView.findViewById(R.id.food_name);
             perServing = itemView.findViewById(R.id.per_serving);
             perServingMeasure = itemView.findViewById(R.id.per_serving_measure);
@@ -118,25 +100,23 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
         }
 
         public void bind(FoodItem foodItem) {
-            // Food details
             foodName.setText(foodItem.getName());
             perServing.setText(foodItem.getServingSize());
             perServingMeasure.setText(foodItem.getUnit() != null ? foodItem.getUnit() : "g");
             caloriesPerServing.setText(foodItem.getCalories());
 
-            // Category icon
             if (foodItem.getCategoryIcon() != 0) {
-                habitIcon.setImageResource(foodItem.getCategoryIcon());
+                foodIcon.setImageResource(
+                        AppConstants.getCategoryIcon(foodItem.getCategory())
+                );
             } else {
-                habitIcon.setImageResource(R.drawable.ic_grocery);
+                foodIcon.setImageResource(R.drawable.ic_grocery);
             }
-            habitIcon.setColorFilter(ContextCompat.getColor(habitIcon.getContext(), R.color.dark_grey));
+            foodIcon.setColorFilter(ContextCompat.getColor(foodIcon.getContext(), R.color.dark_grey));
 
-            // Selection state
             boolean isSelected = selectedItems.contains(foodItem.getId());
             selectionCheckbox.setChecked(isSelected);
 
-            // Click handling
             itemView.setOnClickListener(v -> {
                 if (itemClickListener != null) {
                     itemClickListener.onItemClick(foodItem);
@@ -158,7 +138,6 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
 
             selectionCheckbox.setChecked(!wasSelected);
 
-            // Notify listeners
             if (listener != null) {
                 listener.onSelectionChanged(selectedItems.size());
                 listener.onItemClicked(foodItem, !wasSelected);
@@ -167,13 +146,13 @@ public class FoodSelectionAdapter extends RecyclerView.Adapter<FoodSelectionAdap
     }
     public void deselectItem(long itemId) {
         if (selectedItems.remove(itemId)) {
-            Log.d("FoodSelectionAdapter", "✅ Deselected item ID: " + itemId);
+            Log.d("FoodSelectionAdapter", "Deselected item ID: " + itemId);
             notifyDataSetChanged();
             if (listener != null) {
                 listener.onSelectionChanged(selectedItems.size());
             }
         } else {
-            Log.d("FoodSelectionAdapter", "⚠️ Item ID " + itemId + " was not selected");
+            Log.d("FoodSelectionAdapter", "Item ID " + itemId + " was not selected");
         }
     }
 }

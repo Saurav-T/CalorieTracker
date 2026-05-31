@@ -144,7 +144,7 @@ public class SettingsFragment extends Fragment {
 
     private void exportToCsv(Uri uri) {
         if (dbHelper.getFoodCount() == 0) {
-            Toast.makeText(getContext(), "ℹ️ No food items to export. Add some foods first!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "No food items to export. Add some foods first!", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -153,10 +153,10 @@ public class SettingsFragment extends Fragment {
             requireActivity().runOnUiThread(() -> {
                 if (success) {
                     Toast.makeText(getContext(),
-                            "✅ Exported " + dbHelper.getFoodCount() + " food items to CSV!",
+                            "Exported " + dbHelper.getFoodCount() + " food items to CSV!",
                             Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getContext(), "❌ Export failed. Check logcat for details.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Export failed. Check logcat for details.", Toast.LENGTH_LONG).show();
                 }
             });
         }).start();
@@ -241,7 +241,7 @@ public class SettingsFragment extends Fragment {
                 profilePrefs.edit().clear().apply();
 
                 requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "🗑️ App has been completely reset!\nProfile, foods, meals & settings cleared.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "App has been completely reset!\nProfile, foods, meals & settings cleared.", Toast.LENGTH_LONG).show();
 
                     if (calorieIntakeInput != null) {
                         calorieIntakeInput.setText("");
@@ -253,7 +253,7 @@ public class SettingsFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
                 requireActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), "❌ Reset failed", Toast.LENGTH_SHORT).show());
+                        Toast.makeText(getContext(), "Reset failed", Toast.LENGTH_SHORT).show());
             }
         }).start();
     }

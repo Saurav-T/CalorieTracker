@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caloriecalculator.R;
 import com.example.caloriecalculator.bottomsheets.FoodBottomSheetFragment;
+import com.example.caloriecalculator.helpers.AppConstants;
 import com.example.caloriecalculator.models.FoodItem;
 import com.google.android.material.card.MaterialCardView;
 
@@ -50,7 +51,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 " | Icon ID: " + foodItem.getCategoryIcon());
         // Bind data
         holder.foodName.setText(foodItem.getName());
-        holder.icon.setImageResource(foodItem.getCategoryIcon());
+        holder.icon.setImageResource(
+                AppConstants.getCategoryIcon(foodItem.getCategory())
+        );
         holder.servingSize.setText(foodItem.getServingSize());
         holder.servingUnit.setText(foodItem.getUnit());
         holder.calories.setText(foodItem.getCalories());

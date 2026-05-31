@@ -6,7 +6,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -96,7 +95,7 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
         fatUnit = view.findViewById(R.id.fat_unit);
         proteinUnit = view.findViewById(R.id.protein_unit);
         carbUnit = view.findViewById(R.id.carb_unit);
-        dietaryIndicator = view.findViewById(R.id.indicator_layout); // Veg/Non-veg indicator
+        dietaryIndicator = view.findViewById(R.id.indicator_layout);
         editButton = view.findViewById(R.id.edit);
         deleteButton = view.findViewById(R.id.delete);
     }
@@ -113,10 +112,8 @@ public class FoodBottomSheetFragment extends BottomSheetDialogFragment {
         setMacroValue(foodProtein, proteinUnit, parseDouble(foodItem.getProtein()));
         setMacroValue(foodCarbs, carbUnit, parseDouble(foodItem.getCarbs()));
 
-        // FIXED: Dietary indicator for MaterialCardView
         if ("Non-Vegetarian".equals(foodItem.getDietaryPref())) {
             dietaryIndicator.setStrokeColor(getResources().getColor(R.color.red, null));
-            // Optional: Change tint of inner ImageView
             ImageView innerIcon = dietaryIndicator.findViewById(R.id.inner_dietary_icon); // Add this ID
             if (innerIcon != null) {
                 innerIcon.setColorFilter(getResources().getColor(R.color.red, null));
